@@ -5,6 +5,7 @@ import de.brentspine.ttt.countdowns.LobbyCountdown;
 import de.brentspine.ttt.gamestates.GameState;
 import de.brentspine.ttt.gamestates.GameStateManager;
 import de.brentspine.ttt.gamestates.LobbyState;
+import de.brentspine.ttt.util.ConfigLocationUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
@@ -14,11 +15,11 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.PluginManager;
 
-public class PlayerConnectionListener implements Listener {
+public class PlayerLobbyConnectionListener implements Listener {
 
     private Main plugin;
 
-    public PlayerConnectionListener(Main plugin) {
+    public PlayerLobbyConnectionListener(Main plugin) {
         this.plugin = plugin;
     }
 
@@ -33,6 +34,11 @@ public class PlayerConnectionListener implements Listener {
         plugin.getPlayers().add(player);
         event.setJoinMessage(Main.PREFIX + "§a" + player.getDisplayName() + " §7joined the Game [" +
                 plugin.getPlayers().size() + "/" + LobbyState.MAX_PLAYERS + "]");
+
+        ConfigLocationUtil locationUtil = new ConfigLocationUtil(plugin, "lobby");
+        if(locationUtil.loadLocation() != null) {
+            player.teleport(locationUtil.loadLocation());
+        } else Bukkit.getConsoleSender().sendMessage(Main.PREFIX + "§4Missing Lobbyspawn Location");
 
         LobbyState lobbyState = (LobbyState) plugin.getGameStateManager().getCurrentGameState();
         LobbyCountdown countdown = lobbyState.getCountdown();

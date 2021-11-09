@@ -3,3 +3,9 @@ version: 1.0.0
 author: Brentspine
 api-version: 1.16
 main: de.brentspine.ttt.Main
+
+commands:
+  setup:
+    description: Setup
+  start:
+    description: Start

@@ -8,7 +8,7 @@ import org.bukkit.Bukkit;
 
 public class LobbyCountdown extends Countdown {
 
-    private static final int    COUNTDOWN_TIME = 20,
+    private static final int    COUNTDOWN_TIME = 60,
                                 IDLE_TIME = 15;
 
     private GameStateManager gameStateManager;
@@ -77,6 +77,14 @@ public class LobbyCountdown extends Countdown {
         if(isIdling) {
             Bukkit.getScheduler().cancelTask(idleID);
         }
+    }
+
+    public int getSeconds() {
+        return seconds;
+    }
+
+    public void setSeconds(int seconds) {
+        this.seconds = seconds;
     }
 
     public boolean isRunning() {

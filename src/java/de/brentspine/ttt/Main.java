@@ -1,8 +1,10 @@
 package de.brentspine.ttt;
 
+import de.brentspine.ttt.commands.SetupCommand;
+import de.brentspine.ttt.commands.StartCommand;
 import de.brentspine.ttt.gamestates.GameState;
 import de.brentspine.ttt.gamestates.GameStateManager;
-import de.brentspine.ttt.listeners.PlayerConnectionListener;
+import de.brentspine.ttt.listeners.PlayerLobbyConnectionListener;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
@@ -18,6 +20,7 @@ public class Main extends JavaPlugin {
 
     public static Main instance;
     public static final String PREFIX = "§4§lTTT §8» §7";
+    public static final String NO_PERMISSION = PREFIX + "§cYou don't have enough permissions to do that";
 
     @Override
     public void onEnable() {
@@ -32,7 +35,10 @@ public class Main extends JavaPlugin {
     }
 
     private void init(PluginManager pluginManager) {
-        pluginManager.registerEvents(new PlayerConnectionListener(this), this);
+        getCommand("setup").setExecutor(new SetupCommand(this));
+        getCommand("start").setExecutor(new StartCommand(this));
+
+        pluginManager.registerEvents(new PlayerLobbyConnectionListener(this), this);
     }
 
     @Override
