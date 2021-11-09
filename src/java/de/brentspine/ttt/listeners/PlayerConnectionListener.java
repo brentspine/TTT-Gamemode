@@ -1,6 +1,7 @@
 package de.brentspine.ttt.listeners;
 
 import de.brentspine.ttt.Main;
+import de.brentspine.ttt.countdowns.LobbyCountdown;
 import de.brentspine.ttt.gamestates.GameState;
 import de.brentspine.ttt.gamestates.GameStateManager;
 import de.brentspine.ttt.gamestates.LobbyState;
@@ -32,14 +33,16 @@ public class PlayerConnectionListener implements Listener {
         plugin.getPlayers().add(player);
         event.setJoinMessage(Main.PREFIX + "§a" + player.getDisplayName() + " §7joined the Game [" +
                 plugin.getPlayers().size() + "/" + LobbyState.MAX_PLAYERS + "]");
-        Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
-            @Override
-            public void run() {
-                if(plugin.getPlayers().size() >= LobbyState.MIN_PLAYERS) {
-                    Bukkit.broadcastMessage("Das Spiel würde starten");
-                }
+
+        LobbyState lobbyState = (LobbyState) plugin.getGameStateManager().getCurrentGameState();
+        LobbyCountdown countdown = lobbyState.getCountdown();
+        if(plugin.getPlayers().size() >= LobbyState.MIN_PLAYERS) {
+            if(!countdown.isRunning()) {
+                countdown.stopIdle();
+                countdown.start();
             }
-        }, 5);
+        }
+
     }
 
 
@@ -50,6 +53,15 @@ public class PlayerConnectionListener implements Listener {
         Player player = event.getPlayer();
         plugin.getPlayers().remove(player);
         event.setQuitMessage(Main.PREFIX + "§a" + player.getDisplayName() + " §7left the Game"); //(" + plugin.getPlayers().size() + "/" + LobbyState.MAX_PLAYERS + ")
+
+        LobbyState lobbyState = (LobbyState) plugin.getGameStateManager().getCurrentGameState();
+        LobbyCountdown countdown = lobbyState.getCountdown();
+        if(plugin.getPlayers().size() < LobbyState.MIN_PLAYERS) {
+            if(countdown.isRunning()) {
+                countdown.stop();
+                countdown.startIdle();
+            }
+        }
     }
 
 }
