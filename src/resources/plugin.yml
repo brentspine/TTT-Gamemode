@@ -1,0 +1,5 @@
+name: TTT
+version: 1.0.0
+author: Brentspine
+api-version: 1.16
+main: de.brentspine.ttt.Main
