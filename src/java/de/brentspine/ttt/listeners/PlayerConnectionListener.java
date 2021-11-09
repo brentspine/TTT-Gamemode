@@ -30,11 +30,16 @@ public class PlayerConnectionListener implements Listener {
             return;
         }
         plugin.getPlayers().add(player);
-        event.setJoinMessage(Main.PREFIX + "§a" + player.getDisplayName() + " §7joined the Game (" +
-                plugin.getPlayers().size() + "/" + LobbyState.MAX_PLAYERS + ")");
-        if(plugin.getPlayers().size() >= LobbyState.MIN_PLAYERS) {
-            Bukkit.broadcastMessage("Das Spiel würde starten");
-        }
+        event.setJoinMessage(Main.PREFIX + "§a" + player.getDisplayName() + " §7joined the Game [" +
+                plugin.getPlayers().size() + "/" + LobbyState.MAX_PLAYERS + "]");
+        Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
+            @Override
+            public void run() {
+                if(plugin.getPlayers().size() >= LobbyState.MIN_PLAYERS) {
+                    Bukkit.broadcastMessage("Das Spiel würde starten");
+                }
+            }
+        }, 5);
     }
 
 
