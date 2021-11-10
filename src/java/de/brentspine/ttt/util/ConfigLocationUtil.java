@@ -8,17 +8,22 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
+import java.io.IOException;
 
 public class ConfigLocationUtil {
 
     private Main plugin;
     private Location location;
     private String root;
+    private File file;
+    private YamlConfiguration config;
 
     public ConfigLocationUtil(Main plugin, Location location, String root) {
         this.plugin = plugin;
         this.location = location;
         this.root = root;
+        this.file = new File(plugin.getDataFolder().getPath(),"locations.yml");
+        this.config = new YamlConfiguration().loadConfiguration(file);
     }
 
     public ConfigLocationUtil(Main plugin, String root) {
@@ -26,20 +31,20 @@ public class ConfigLocationUtil {
     }
 
     public void saveLocation() {
-        File f = new File(plugin.getDataFolder().getPath(),"locations.yml");
-        YamlConfiguration config = new YamlConfiguration().loadConfiguration(f);
         config.set(root + ".world", location.getWorld().getName());
         config.set(root + ".x", location.getX());
         config.set(root + ".y", location.getY());
         config.set(root + ".z", location.getZ());
         config.set(root + ".yaw", location.getYaw());
         config.set(root + ".pitch", location.getPitch());
-        plugin.saveConfig();
+        try {
+            config.save(file);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public Location loadLocation() {
-        File f = new File(plugin.getDataFolder().getPath(),"locations.yml");
-        YamlConfiguration config = new YamlConfiguration().loadConfiguration(f);
         if(!config.contains(root)) {
             return null;
         }

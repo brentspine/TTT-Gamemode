@@ -9,7 +9,7 @@ import org.bukkit.Bukkit;
 public class LobbyCountdown extends Countdown {
 
     private static final int    COUNTDOWN_TIME = 60,
-                                IDLE_TIME = 15;
+                                IDLE_TIME = 55;
 
     private GameStateManager gameStateManager;
 
