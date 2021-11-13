@@ -4,6 +4,7 @@ import de.brentspine.ttt.Main;
 import de.brentspine.ttt.gamestates.LobbyState;
 import de.brentspine.ttt.util.ConfigLocationUtil;
 import de.brentspine.ttt.voting.Map;
+import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -75,8 +76,13 @@ public class SetupCommand implements CommandExecutor {
                     player.sendMessage(Main.PREFIX + "§cThis map does not exist!");
                     return true;
                 }
-                player.teleport(map.getSpectatorSpawn());
-                player.sendMessage(Main.PREFIX + "Teleported you to Map §c" + map.getName() + "§7 built by §c" + map.getBuilder());
+                try {
+                    player.teleport(map.getSpectatorSpawn());
+                    player.sendMessage(Main.PREFIX + "Teleported you to Map §c" + map.getName() + "§7 built by §c" + map.getBuilder());
+                } catch (Exception e) {
+                    player.sendMessage(Main.PREFIX + "This map does not have a spectatorSpawn");
+                    player.teleport(new Location(player.getWorld(), player.getLocation().getX(), 100, player.getLocation().getZ()));
+                }
             }
 
             else if(args[0].equalsIgnoreCase("modifyMap")) {

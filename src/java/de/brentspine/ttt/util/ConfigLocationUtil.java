@@ -16,12 +16,17 @@ public class ConfigLocationUtil {
     private Location location;
     private String root;
     private File file;
-    private YamlConfiguration config;
+    public YamlConfiguration config;
 
     public ConfigLocationUtil(Main plugin, Location location, String root) {
         this.plugin = plugin;
         this.location = location;
         this.root = root;
+        this.file = new File(plugin.getDataFolder().getPath(),"locations.yml");
+        this.config = new YamlConfiguration().loadConfiguration(file);
+    }
+
+    public ConfigLocationUtil(Main plugin) {
         this.file = new File(plugin.getDataFolder().getPath(),"locations.yml");
         this.config = new YamlConfiguration().loadConfiguration(file);
     }
@@ -57,4 +62,8 @@ public class ConfigLocationUtil {
         return new Location(world, x, y, z, yaw, pitch);
     }
 
+
+    public YamlConfiguration getConfig() {
+        return config;
+    }
 }

@@ -5,6 +5,8 @@ import de.brentspine.ttt.commands.StartCommand;
 import de.brentspine.ttt.gamestates.GameState;
 import de.brentspine.ttt.gamestates.GameStateManager;
 import de.brentspine.ttt.listeners.PlayerLobbyConnectionListener;
+import de.brentspine.ttt.voting.Map;
+import de.brentspine.ttt.voting.Voting;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
@@ -17,6 +19,7 @@ public class Main extends JavaPlugin {
     private GameStateManager gameStateManager;
     private ArrayList<Player> players;
     private ArrayList<Player> spectators;
+    private Voting voting;
 
     public static Main instance;
     public static final String PREFIX = "§4§lTTT §8» §7";
@@ -32,6 +35,7 @@ public class Main extends JavaPlugin {
 
         init(Bukkit.getPluginManager());
         Bukkit.getConsoleSender().sendMessage(PREFIX + "Das Plugin wurde gestartet.");
+
     }
 
     private void init(PluginManager pluginManager) {
@@ -40,6 +44,19 @@ public class Main extends JavaPlugin {
 
         pluginManager.registerEvents(new PlayerLobbyConnectionListener(this), this);
     }
+
+    private void initVoting() {
+        ArrayList<Map> maps = new ArrayList<>();
+        for(String current : new Map(this).getConfig().getConfigurationSection("maps").getKeys(false)) {
+            Map map = new Map(this, current, null);
+            if(map.playable())
+                maps.add(map);
+            else
+                Bukkit.getConsoleSender().sendMessage(Main.PREFIX + "§cMap §4" + map.getName() + "§c is not playable!");
+        }
+        voting = new Voting(this, maps);
+    }
+
 
     @Override
     public void onDisable() {
@@ -56,5 +73,9 @@ public class Main extends JavaPlugin {
 
     public ArrayList<Player> getSpectators() {
         return spectators;
+    }
+
+    public Voting getVoting() {
+        return voting;
     }
 }

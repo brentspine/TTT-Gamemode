@@ -3,8 +3,12 @@ package de.brentspine.ttt.voting;
 import de.brentspine.ttt.Main;
 import de.brentspine.ttt.gamestates.LobbyState;
 import de.brentspine.ttt.util.ConfigLocationUtil;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.inventory.ItemStack;
 
 import java.io.File;
 import java.io.IOException;
@@ -30,9 +34,26 @@ public class Map {
         this.config = new YamlConfiguration().loadConfiguration(file);
     }
 
+    public Map(Main plugin) {
+        this.plugin = plugin;
+        this.file = new File(plugin.getDataFolder().getPath(),"maps.yml");
+        this.config = new YamlConfiguration().loadConfiguration(file);
+    }
+
 
     public boolean exists() {
         return (config.getString("maps." + name + ".builder") != null);
+    }
+
+    public boolean playable() {
+        ConfigurationSection configurationSection = config.getConfigurationSection("maps." + name);
+        if(!configurationSection.contains("builder")) return false;
+        configurationSection = new ConfigLocationUtil(plugin).getConfig().getConfigurationSection("maps." + name);
+        if(!configurationSection.contains("spectator")) return false;
+        for (int i = 0; i < LobbyState.MAX_PLAYERS; i++) {
+            if(configurationSection.contains(Integer.toString(i + 1))) return false;
+        }
+        return true;
     }
 
     public void setSpawnLocation(int spawnNumber, Location location) {
@@ -87,10 +108,15 @@ public class Map {
     }
 
     public Location getSpectatorSpawn() {
+        //return new ConfigLocationUtil(plugin, new Location(Bukkit.getWorld(config.getString("maps." + name + ".spectator.world")), config.getDouble("maps." + name + ".spectator.x"), config.getDouble("maps." + name + ".spectator.y"), config.getDouble("maps." + name + ".spectator.z")), "maps." + name + ".spectator").loadLocation();
         return spectatorSpawn;
     }
 
     public Location[] getSpawnLocations() {
         return spawnLocations;
+    }
+
+    public YamlConfiguration getConfig() {
+        return config;
     }
 }
