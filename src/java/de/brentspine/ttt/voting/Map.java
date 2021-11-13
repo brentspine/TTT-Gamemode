@@ -22,6 +22,9 @@ public class Map {
     private String builder;
     private Location[] spawnLocations = new Location[LobbyState.MAX_PLAYERS];
     private Location spectatorSpawn;
+
+    private int votes;
+
     private File file;
     private YamlConfiguration config;
 
@@ -32,6 +35,7 @@ public class Map {
         this.builder = builder;
         this.file = new File(plugin.getDataFolder().getPath(),"maps.yml");
         this.config = new YamlConfiguration().loadConfiguration(file);
+        votes = 0;
     }
 
     public Map(Main plugin) {
@@ -118,5 +122,13 @@ public class Map {
 
     public YamlConfiguration getConfig() {
         return config;
+    }
+
+    public int getVotes() {
+        return votes;
+    }
+
+    public String getDisplayName() {
+        return displayName;
     }
 }

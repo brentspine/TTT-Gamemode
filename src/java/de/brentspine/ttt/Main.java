@@ -20,6 +20,7 @@ public class Main extends JavaPlugin {
     private ArrayList<Player> players;
     private ArrayList<Player> spectators;
     private Voting voting;
+    private ArrayList<Map> maps;
 
     public static Main instance;
     public static final String PREFIX = "§4§lTTT §8» §7";
@@ -39,6 +40,7 @@ public class Main extends JavaPlugin {
     }
 
     private void init(PluginManager pluginManager) {
+        initVoting();
         getCommand("setup").setExecutor(new SetupCommand(this));
         getCommand("start").setExecutor(new StartCommand(this));
 
@@ -46,7 +48,7 @@ public class Main extends JavaPlugin {
     }
 
     private void initVoting() {
-        ArrayList<Map> maps = new ArrayList<>();
+        maps = new ArrayList<>();
         for(String current : new Map(this).getConfig().getConfigurationSection("maps").getKeys(false)) {
             Map map = new Map(this, current, null);
             if(map.playable())
@@ -54,7 +56,14 @@ public class Main extends JavaPlugin {
             else
                 Bukkit.getConsoleSender().sendMessage(Main.PREFIX + "§cMap §4" + map.getName() + "§c is not playable!");
         }
-        voting = new Voting(this, maps);
+        if(maps.size() >= Voting.MAP_AMOUNT) {
+
+        } else {
+            Bukkit.getConsoleSender().sendMessage(Main.PREFIX + "§cThere are not enough maps to create a voting");
+            Bukkit.getConsoleSender().sendMessage(Main.PREFIX + "§cYou need at least " + Voting.MAP_AMOUNT + " maps");
+            voting = null;
+        }
+
     }
 
 
@@ -77,5 +86,9 @@ public class Main extends JavaPlugin {
 
     public Voting getVoting() {
         return voting;
+    }
+
+    public ArrayList<Map> getMaps() {
+        return maps;
     }
 }

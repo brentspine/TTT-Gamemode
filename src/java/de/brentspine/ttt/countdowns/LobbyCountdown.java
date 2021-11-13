@@ -1,10 +1,16 @@
 package de.brentspine.ttt.countdowns;
 
+import com.google.common.collect.Maps;
 import de.brentspine.ttt.Main;
 import de.brentspine.ttt.gamestates.GameState;
 import de.brentspine.ttt.gamestates.GameStateManager;
 import de.brentspine.ttt.gamestates.LobbyState;
+import de.brentspine.ttt.voting.Map;
+import de.brentspine.ttt.voting.Voting;
 import org.bukkit.Bukkit;
+
+import java.util.ArrayList;
+import java.util.Collections;
 
 public class LobbyCountdown extends Countdown {
 
@@ -37,6 +43,20 @@ public class LobbyCountdown extends Countdown {
                     case 3:
                     case 2:
                         Bukkit.broadcastMessage(Main.PREFIX + "§7Game starting in §a" + seconds + " seconds§7");
+
+                        if(seconds == 3) {
+                            Voting voting = gameStateManager.getPlugin().getVoting();
+                            Map winnerMap;
+                            if(voting != null) {
+                                winnerMap = voting.getWinnerMap();
+                            } else {
+                                ArrayList<Map> maps = gameStateManager.getPlugin().getMaps();
+                                Collections.shuffle(maps);
+                                winnerMap = maps.get(0);
+                            }
+                            Bukkit.broadcastMessage(Main.PREFIX + "Voting winner: §c" + winnerMap.getDisplayName() + "§7 with §c" + winnerMap.getVotes() + "§7 votes");
+                        }
+
                         break;
                     case 1:
                         Bukkit.broadcastMessage(Main.PREFIX + "§7Game starting in §a" + seconds + " second§7");
