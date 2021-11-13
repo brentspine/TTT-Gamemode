@@ -36,10 +36,10 @@ public class LobbyCountdown extends Countdown {
                     case 4:
                     case 3:
                     case 2:
-                        Bukkit.broadcastMessage(Main.PREFIX + "§7Game starting in §a" + seconds + " seconds§7.");
+                        Bukkit.broadcastMessage(Main.PREFIX + "§7Game starting in §a" + seconds + " seconds§7");
                         break;
                     case 1:
-                        Bukkit.broadcastMessage(Main.PREFIX + "§7Game starting in §a" + seconds + " second§7.");
+                        Bukkit.broadcastMessage(Main.PREFIX + "§7Game starting in §a" + seconds + " second§7");
                         break;
                     case 0:
                         gameStateManager.setCurrentGameState(GameState.INGAME_STATE);

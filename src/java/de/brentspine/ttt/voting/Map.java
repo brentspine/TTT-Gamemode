@@ -2,6 +2,7 @@ package de.brentspine.ttt.voting;
 
 import de.brentspine.ttt.Main;
 import de.brentspine.ttt.gamestates.LobbyState;
+import de.brentspine.ttt.util.ConfigLocationUtil;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -32,6 +33,20 @@ public class Map {
 
     public boolean exists() {
         return (config.getString("maps." + name + ".builder") != null);
+    }
+
+    public void setSpawnLocation(int spawnNumber, Location location) {
+        spawnLocations[spawnNumber - 1] = location;
+        new ConfigLocationUtil(plugin, location, "maps." + name + ".spawn." + spawnNumber).saveLocation();
+    }
+
+    public void removeSpawnLocation(int spawnNumber) {
+        spawnLocations[spawnNumber - 1] = null;
+    }
+
+    public void setSpectatorSpawn(Location location) {
+        spectatorSpawn = location;
+        new ConfigLocationUtil(plugin, location, "maps." + name + ".spectator").saveLocation();
     }
 
     public void create() {
