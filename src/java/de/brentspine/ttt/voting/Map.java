@@ -53,14 +53,18 @@ public class Map {
     }
 
     public boolean playable() {
-        ConfigurationSection configurationSection = config.getConfigurationSection("maps." + name);
-        if(!configurationSection.contains("builder")) return false;
-        configurationSection = new ConfigLocationUtil(plugin).getConfig().getConfigurationSection("maps." + name);
-        if(!configurationSection.contains("spectator")) return false;
-        for (int i = 0; i < LobbyState.MAX_PLAYERS; i++) {
-            if(configurationSection.contains(Integer.toString(i + 1))) return false;
+        try {
+            ConfigurationSection configurationSection = config.getConfigurationSection("maps." + name);
+            if(!configurationSection.contains("builder")) return false;
+            configurationSection = new ConfigLocationUtil(plugin).getConfig().getConfigurationSection("maps." + name);
+            if(!configurationSection.contains("spectator")) return false;
+            for (int i = 0; i < LobbyState.MAX_PLAYERS; i++) {
+                if(configurationSection.contains(Integer.toString(i + 1))) return false;
+            }
+            return true;
+        } catch (NullPointerException e) {
+            return false;
         }
-        return true;
     }
 
     public void setSpawnLocation(int spawnNumber, Location location) {

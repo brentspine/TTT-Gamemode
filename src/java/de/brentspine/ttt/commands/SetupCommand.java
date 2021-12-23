@@ -39,6 +39,18 @@ public class SetupCommand implements CommandExecutor {
                 player.sendMessage(Main.PREFIX + "The Lobby Spawn was set");
             }
 
+            else if(args[0].equalsIgnoreCase("maps")) {
+                String message = "";
+                for(Map current : Main.instance.getMaps()) {
+                    String playable = "not playable";
+                    if(current.exists() && current.playable()) {
+                        playable = "playable";
+                    }
+                    message = message + current.getName() + " - " + playable + "\n";
+                }
+                player.sendMessage(message);
+            }
+
             else if(args[0].equalsIgnoreCase("addMap")) {
                 if(args.length < 3) {
                     player.sendMessage(Main.PREFIX + "§c/setup addMap <Name> <Builder>");

@@ -6,9 +6,11 @@ import de.brentspine.ttt.util.ItemBuilder;
 import de.brentspine.ttt.util.Settings;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -25,10 +27,16 @@ public class Voting {
     private HashMap<String, Integer> playerVotes = new HashMap<>();
     private Inventory votingInventory;
 
+    File file;
+    YamlConfiguration config;
+
     public Voting(Main plugin, ArrayList<Map> maps) {
         this.plugin = plugin;
         this.maps = maps;
         votingMaps = new Map[MAP_AMOUNT];
+
+        this.file = new File(plugin.getDataFolder().getPath(),"maps.yml");
+        this.config = new YamlConfiguration().loadConfiguration(file);
 
         chooseRandomMaps();
         initVotingInventory();

@@ -53,8 +53,10 @@ public class Main extends JavaPlugin {
         maps = new ArrayList<>();
         for(String current : new Map(this).getConfig().getConfigurationSection("maps").getKeys(false)) {
             Map map = new Map(this, current, null);
-            if(map.playable())
+            if(map.playable()) {
                 maps.add(map);
+                Bukkit.getConsoleSender().sendMessage(Main.PREFIX + "§aMap §e" + map.getName() + "§a wurde geladen");
+            }
             else
                 Bukkit.getConsoleSender().sendMessage(Main.PREFIX + "§cMap §4" + map.getName() + "§c is not playable!");
         }
