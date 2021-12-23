@@ -29,12 +29,6 @@ public class Dice {
         return result;
     }
 
-    private Dice run() {
-        if(!running) {
-            running = true;
-        }
-        return this;
-    }
 
     public Integer getResult() {
         if(result == null) {

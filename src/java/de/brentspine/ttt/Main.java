@@ -5,6 +5,7 @@ import de.brentspine.ttt.commands.StartCommand;
 import de.brentspine.ttt.gamestates.GameState;
 import de.brentspine.ttt.gamestates.GameStateManager;
 import de.brentspine.ttt.listeners.PlayerLobbyConnectionListener;
+import de.brentspine.ttt.listeners.VotingListener;
 import de.brentspine.ttt.voting.Map;
 import de.brentspine.ttt.voting.Voting;
 import org.bukkit.Bukkit;
@@ -45,6 +46,7 @@ public class Main extends JavaPlugin {
         getCommand("start").setExecutor(new StartCommand(this));
 
         pluginManager.registerEvents(new PlayerLobbyConnectionListener(this), this);
+        pluginManager.registerEvents(new VotingListener(this), this);
     }
 
     private void initVoting() {
@@ -57,7 +59,7 @@ public class Main extends JavaPlugin {
                 Bukkit.getConsoleSender().sendMessage(Main.PREFIX + "§cMap §4" + map.getName() + "§c is not playable!");
         }
         if(maps.size() >= Voting.MAP_AMOUNT) {
-
+            voting = new Voting(this, maps);
         } else {
             Bukkit.getConsoleSender().sendMessage(Main.PREFIX + "§cThere are not enough maps to create a voting");
             Bukkit.getConsoleSender().sendMessage(Main.PREFIX + "§cYou need at least " + Voting.MAP_AMOUNT + " maps");

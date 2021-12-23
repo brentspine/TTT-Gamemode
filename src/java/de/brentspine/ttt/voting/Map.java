@@ -32,9 +32,12 @@ public class Map {
         this.plugin = plugin;
         this.name = name.toLowerCase();
         this.displayName = name;
-        this.builder = builder;
+
         this.file = new File(plugin.getDataFolder().getPath(),"maps.yml");
         this.config = new YamlConfiguration().loadConfiguration(file);
+        if(exists() && builder == null)
+            builder = config.getString("maps." + name + ".builder");
+        this.builder = builder;
         votes = 0;
     }
 
@@ -93,6 +96,14 @@ public class Map {
                 e.printStackTrace();
             }
         }
+    }
+
+    public void addVote() {
+        votes++;
+    }
+
+    public void removeVote() {
+        votes--;
     }
 
     public void setName(String name) {
