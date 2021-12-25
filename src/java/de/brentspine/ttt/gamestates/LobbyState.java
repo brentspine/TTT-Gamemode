@@ -22,7 +22,7 @@ public class LobbyState extends GameState {
 
     @Override
     public void stop() {
-        Bukkit.broadcastMessage("Lobbystate stopping");
+        countdown.stop();
     }
 
     public LobbyCountdown getCountdown() {
