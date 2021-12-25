@@ -7,6 +7,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
+
 public class RoleCountdown extends Countdown {
 
     private Main plugin;
@@ -40,9 +42,20 @@ public class RoleCountdown extends Countdown {
                         stop();
                         Bukkit.broadcastMessage(Main.PREFIX + "Die Rollen werden vergeben");
                         plugin.getRoleManager().calculateRoles();
+
+                        ArrayList<String> traitorPlayers = plugin.getRoleManager().getTraitorPlayers();
+                        ArrayList<String> detectivePlayers = plugin.getRoleManager().getDetectivePlayers();
                         for (Player current : plugin.getPlayers()) {
                             Role role = plugin.getRoleManager().getPlayerRole(current);
                             current.sendTitle(role.getChatColor() + role.getName(), "");
+                            current.setDisplayName(role.getChatColor() + current.getName());
+
+                            /*if(role != Role.DETECTIVE) {
+                                current.sendMessage(Main.PREFIX + "Die Detectives sind §9" + String.join(", " + detectivePlayers));
+                            }
+                            if(role == Role.TRAITOR) {
+                                current.sendMessage(Main.PREFIX + "Die Traitor sind §c" + String.join(", " + traitorPlayers));
+                            }*/
                         }
                         break;
                     default:

@@ -33,6 +33,8 @@ public class InGameState extends GameState {
             players.get(i).teleport(map.getSpawnLocations()[i]);
 
         for(Player current : players) {
+            current.setHealth(20);
+            current.setFoodLevel(20);
             current.getInventory().clear();
         }
 
