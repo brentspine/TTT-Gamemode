@@ -1,8 +1,11 @@
 package de.brentspine.ttt.countdowns;
 
 import de.brentspine.ttt.Main;
+import de.brentspine.ttt.role.Role;
 import de.brentspine.ttt.util.Settings;
 import org.bukkit.Bukkit;
+import org.bukkit.Sound;
+import org.bukkit.entity.Player;
 
 public class RoleCountdown extends Countdown {
 
@@ -36,6 +39,11 @@ public class RoleCountdown extends Countdown {
                     case 0:
                         stop();
                         Bukkit.broadcastMessage(Main.PREFIX + "Die Rollen werden vergeben");
+                        plugin.getRoleManager().calculateRoles();
+                        for (Player current : plugin.getPlayers()) {
+                            Role role = plugin.getRoleManager().getPlayerRole(current);
+                            current.sendTitle(role.getChatColor() + role.getName(), "");
+                        }
                         break;
                     default:
                         break;

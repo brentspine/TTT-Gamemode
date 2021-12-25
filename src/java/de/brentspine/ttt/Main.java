@@ -6,6 +6,7 @@ import de.brentspine.ttt.gamestates.GameState;
 import de.brentspine.ttt.gamestates.GameStateManager;
 import de.brentspine.ttt.listeners.PlayerLobbyConnectionListener;
 import de.brentspine.ttt.listeners.VotingListener;
+import de.brentspine.ttt.role.RoleManager;
 import de.brentspine.ttt.voting.Map;
 import de.brentspine.ttt.voting.Voting;
 import org.bukkit.Bukkit;
@@ -22,6 +23,7 @@ public class Main extends JavaPlugin {
     private ArrayList<Player> spectators;
     private Voting voting;
     private ArrayList<Map> maps;
+    private RoleManager roleManager;
 
     public static Main instance;
     public static final String PREFIX = "§4§lTTT §8» §7";
@@ -32,11 +34,15 @@ public class Main extends JavaPlugin {
         instance = this;
         gameStateManager = new GameStateManager(this);
         players = new ArrayList<>();
+        roleManager = new RoleManager(this);
 
         gameStateManager.setCurrentGameState(GameState.LOBBY_STATE);
 
         init(Bukkit.getPluginManager());
         Bukkit.getConsoleSender().sendMessage(PREFIX + "Das Plugin wurde gestartet.");
+
+
+        Bukkit.getConsoleSender().sendMessage(" ");
 
     }
 
@@ -95,4 +101,9 @@ public class Main extends JavaPlugin {
     public ArrayList<Map> getMaps() {
         return maps;
     }
+
+    public RoleManager getRoleManager() {
+        return roleManager;
+    }
+
 }

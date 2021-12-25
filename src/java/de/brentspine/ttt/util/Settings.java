@@ -15,4 +15,7 @@ public abstract class Settings {
     public static String votingItemName = "§cMap-Voting";
     public static Integer roleCountdownSeconds = 30;
 
+    public static Double traitorProbability = 0.9;
+    public static Double detectiveProbability = 0.8;
+
 }
