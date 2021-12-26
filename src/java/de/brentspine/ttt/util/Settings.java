@@ -18,4 +18,8 @@ public abstract class Settings {
     public static Double traitorProbability = 0.9;
     public static Double detectiveProbability = 0.8;
 
+
+
+    //Man könnte einen Modus machen, bei dem Traitor nicht sehen können wer die anderen Verräter sind.
+
 }

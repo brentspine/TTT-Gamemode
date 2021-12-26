@@ -4,6 +4,7 @@ import de.brentspine.ttt.commands.SetupCommand;
 import de.brentspine.ttt.commands.StartCommand;
 import de.brentspine.ttt.gamestates.GameState;
 import de.brentspine.ttt.gamestates.GameStateManager;
+import de.brentspine.ttt.listeners.GameProgressListener;
 import de.brentspine.ttt.listeners.PlayerLobbyConnectionListener;
 import de.brentspine.ttt.listeners.VotingListener;
 import de.brentspine.ttt.role.RoleManager;
@@ -53,6 +54,7 @@ public class Main extends JavaPlugin {
 
         pluginManager.registerEvents(new PlayerLobbyConnectionListener(this), this);
         pluginManager.registerEvents(new VotingListener(this), this);
+        pluginManager.registerEvents(new GameProgressListener(this), this);
     }
 
     private void initVoting() {
