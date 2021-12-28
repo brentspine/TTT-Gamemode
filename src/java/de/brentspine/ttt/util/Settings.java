@@ -1,5 +1,9 @@
 package de.brentspine.ttt.util;
 
+import org.bukkit.Material;
+
+import java.util.ArrayList;
+
 public abstract class Settings {
 
     public static boolean oneTimeVote = true;
@@ -14,9 +18,14 @@ public abstract class Settings {
     public static String votingInventoryTitle = "§b§lVoting";
     public static String votingItemName = "§cMap-Voting";
     public static Integer roleCountdownSeconds = 10;
+    public static boolean allowDropItems = true;
+    public static boolean allowDropRoleItems = false;
 
     public static Double traitorProbability = 0.9;
     public static Double detectiveProbability = 0.8;
+
+    //Item Names
+    public static String traitorBowName = "§aTraitor-Bow";
 
 
 

@@ -17,11 +17,13 @@ public class InGameState extends GameState {
     private Map map;
     private ArrayList<Player> players;
     private RoleCountdown roleCountdown;
+    public boolean grace;
 
     private Role winnerRole;
 
     public InGameState(Main plugin) {
         this.plugin = plugin;
+        this.grace = true;
         roleCountdown = new RoleCountdown(plugin);
     }
 
@@ -63,4 +65,11 @@ public class InGameState extends GameState {
         Bukkit.broadcastMessage(Main.PREFIX + "Die " + winnerRole.getChatColor() + winnerRole.getName() + "§7 haben gewonnen");
     }
 
+    public void setGrace(boolean grace) {
+        this.grace = grace;
+    }
+
+    public boolean isGrace() {
+        return grace;
+    }
 }

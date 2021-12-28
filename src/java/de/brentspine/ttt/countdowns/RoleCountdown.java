@@ -1,6 +1,7 @@
 package de.brentspine.ttt.countdowns;
 
 import de.brentspine.ttt.Main;
+import de.brentspine.ttt.gamestates.InGameState;
 import de.brentspine.ttt.role.Role;
 import de.brentspine.ttt.util.Settings;
 import org.bukkit.Bukkit;
@@ -40,6 +41,9 @@ public class RoleCountdown extends Countdown {
                         break;
                     case 0:
                         stop();
+                        InGameState inGameState = (InGameState) plugin.getGameStateManager().getCurrentGameState();
+                        inGameState.setGrace(false);
+
                         Bukkit.broadcastMessage(Main.PREFIX + "Die Rollen werden vergeben");
                         plugin.getRoleManager().calculateRoles();
 

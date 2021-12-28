@@ -59,6 +59,7 @@ public class PlayerLobbyConnectionListener implements Listener {
             }
         }
 
+        player.getInventory().setChestplate(null);
     }
 
 
@@ -85,6 +86,7 @@ public class PlayerLobbyConnectionListener implements Listener {
             voting.getPlayerVotes().remove(player.getName());
             voting.initVotingInventory();
         }
+
     }
 
 }
