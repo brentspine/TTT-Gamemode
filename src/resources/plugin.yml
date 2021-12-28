@@ -3,9 +3,13 @@ version: 1.0.0
 author: Brentspine
 api-version: 1.16
 main: de.brentspine.ttt.Main
+depend:
+  - ProtocolLib
 
 commands:
   setup:
     description: Setup
   start:
     description: Start
+  boom:
+    description: Boom
