@@ -1,9 +1,18 @@
 package de.brentspine.ttt;
 
+import com.comphenix.protocol.PacketType;
+import com.comphenix.protocol.ProtocolLibrary;
+import com.comphenix.protocol.ProtocolManager;
+import com.comphenix.protocol.events.ListenerPriority;
+import com.comphenix.protocol.events.PacketAdapter;
+import com.comphenix.protocol.events.PacketContainer;
+import com.comphenix.protocol.events.PacketEvent;
+import de.brentspine.ttt.commands.BoomCommand;
 import de.brentspine.ttt.commands.SetupCommand;
 import de.brentspine.ttt.commands.StartCommand;
 import de.brentspine.ttt.gamestates.GameState;
 import de.brentspine.ttt.gamestates.GameStateManager;
+import de.brentspine.ttt.listeners.BlockedListeners;
 import de.brentspine.ttt.listeners.GameProgressListener;
 import de.brentspine.ttt.listeners.PlayerLobbyConnectionListener;
 import de.brentspine.ttt.listeners.VotingListener;
@@ -11,6 +20,7 @@ import de.brentspine.ttt.role.RoleManager;
 import de.brentspine.ttt.voting.Map;
 import de.brentspine.ttt.voting.Voting;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -25,6 +35,8 @@ public class Main extends JavaPlugin {
     private Voting voting;
     private ArrayList<Map> maps;
     private RoleManager roleManager;
+    private ProtocolManager protocolManager;
+    private BlockedListeners blockedListeners;
 
     public static Main instance;
     public static final String PREFIX = "§4§lTTT §8» §7";
@@ -36,6 +48,10 @@ public class Main extends JavaPlugin {
         gameStateManager = new GameStateManager(this);
         players = new ArrayList<>();
         roleManager = new RoleManager(this);
+        protocolManager = ProtocolLibrary.getProtocolManager();
+        blockedListeners = new BlockedListeners(this);
+
+
 
         gameStateManager.setCurrentGameState(GameState.LOBBY_STATE);
 
@@ -45,16 +61,19 @@ public class Main extends JavaPlugin {
 
         Bukkit.getConsoleSender().sendMessage(" ");
 
+
     }
 
     private void init(PluginManager pluginManager) {
         initVoting();
         getCommand("setup").setExecutor(new SetupCommand(this));
         getCommand("start").setExecutor(new StartCommand(this));
+        getCommand("boom").setExecutor(new BoomCommand());
 
         pluginManager.registerEvents(new PlayerLobbyConnectionListener(this), this);
         pluginManager.registerEvents(new VotingListener(this), this);
         pluginManager.registerEvents(new GameProgressListener(this), this);
+        pluginManager.registerEvents(blockedListeners, this);
     }
 
     private void initVoting() {
