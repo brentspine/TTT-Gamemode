@@ -1,14 +1,38 @@
 package de.brentspine.ttt.listeners;
 
+import com.comphenix.protocol.PacketType;
+import com.comphenix.protocol.ProtocolLibrary;
+import com.comphenix.protocol.ProtocolManager;
+import com.comphenix.protocol.events.ListenerPriority;
+import com.comphenix.protocol.events.PacketAdapter;
+import com.comphenix.protocol.events.PacketContainer;
+import com.comphenix.protocol.events.PacketEvent;
+import com.comphenix.protocol.reflect.EquivalentConverter;
+import com.comphenix.protocol.reflect.StructureModifier;
+import com.comphenix.protocol.wrappers.*;
 import de.brentspine.ttt.Main;
 import de.brentspine.ttt.gamestates.InGameState;
 import de.brentspine.ttt.role.Role;
 import de.brentspine.ttt.role.RoleManager;
+import de.brentspine.ttt.util.ItemBuilder;
+import org.bukkit.ChatColor;
+import net.minecraft.server.v1_16_R3.EnumItemSlot;
+import net.minecraft.server.v1_16_R3.PacketEncoder;
+import net.minecraft.server.v1_16_R3.PacketPlayOutEntityEquipment;
+import org.bukkit.Bukkit;
+import org.bukkit.Color;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.inventory.ItemStack;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 public class GameProgressListener implements Listener {
 
@@ -45,9 +69,22 @@ public class GameProgressListener implements Listener {
         if(!(plugin.getGameStateManager().getCurrentGameState() instanceof InGameState)) return;
         InGameState inGameState = (InGameState) plugin.getGameStateManager().getCurrentGameState();
         Player victim = event.getEntity();
-        if(victim.getKiller() == null) return;
-        Player killer = victim.getKiller();
         Role victimRole = roleManager.getPlayerRole(victim);
+
+        if(victimRole == Role.TRAITOR)
+            plugin.getRoleManager().getTraitorPlayers().remove(victim.getName());
+        if(victimRole == Role.DETECTIVE)
+            plugin.getRoleManager().getDetectivePlayers().remove(victim.getName());
+        plugin.getPlayers().remove(victim);
+
+        event.setDeathMessage("");
+
+        if(victim.getKiller() == null) {
+            victim.sendMessage(Main.PREFIX + "§cDu bist gestorben");
+            victim.sendTitle("§cVorbei", "§cDu bist gestorben", 5, 65, 10);
+            return;
+        }
+        Player killer = victim.getKiller();
         Role killerRole = roleManager.getPlayerRole(killer);
 
         switch (killerRole) {
@@ -73,16 +110,52 @@ public class GameProgressListener implements Listener {
         }
 
         victim.sendMessage(Main.PREFIX + "§7Du wurdest von " + killerRole.getChatColor() + killer.getName() + "§7 ermordet");
-        victim.sendTitle("§cVorbei", "§cDu wurdest ermordet");
-
-        if(victimRole == Role.TRAITOR)
-            plugin.getRoleManager().getTraitorPlayers().remove(victim.getName());
-        if(victimRole == Role.DETECTIVE)
-            plugin.getRoleManager().getDetectivePlayers().remove(victim.getName());
-        plugin.getPlayers().remove(victim);
+        victim.sendTitle("§cVorbei", "§cDu wurdest ermordet", 5, 65, 10);
 
         inGameState.checkGameEnd();
+
     }
+
+    @EventHandler
+    public void onPlayerQuit(PlayerQuitEvent event) {
+        if(!(plugin.getGameStateManager().getCurrentGameState() instanceof InGameState)) return;
+        Player player = event.getPlayer();
+        if(plugin.getPlayers().contains(player)) {
+            InGameState inGameState = (InGameState) plugin.getGameStateManager().getCurrentGameState();
+            plugin.getPlayers().remove(player);
+            event.setQuitMessage(Main.PREFIX + "§c" + event.getPlayer().getName() + "§7 hat das Spiel verlassen");
+            inGameState.checkGameEnd();
+        }
+    }
+
+
+    //Not needed anymore, put into roleManager.runFakeArmor()
+    @Deprecated
+    private ChatColor getColorToSend(Player player, Player target) {
+
+        switch (roleManager.getPlayerRole(player)) {
+            case TRAITOR:
+                switch (roleManager.getPlayerRole(target)) {
+                    case TRAITOR:
+                        return Role.TRAITOR.getChatColor();
+                    case DETECTIVE:
+                    case INNOCENT:
+                        return Role.INNOCENT.getChatColor();
+                }
+                break;
+            case DETECTIVE:
+                return Role.DETECTIVE.getChatColor();
+            case INNOCENT:
+                return Role.INNOCENT.getChatColor();
+            default:
+                return null;
+        }
+        return null;
+    }
+
+
+
+
 
 
 }

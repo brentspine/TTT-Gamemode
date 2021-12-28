@@ -13,7 +13,7 @@ public abstract class Settings {
     public static String noPermission = prefix + "§cYou don't have enough permissions to do that";
     public static String votingInventoryTitle = "§b§lVoting";
     public static String votingItemName = "§cMap-Voting";
-    public static Integer roleCountdownSeconds = 30;
+    public static Integer roleCountdownSeconds = 10;
 
     public static Double traitorProbability = 0.9;
     public static Double detectiveProbability = 0.8;
