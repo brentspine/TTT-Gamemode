@@ -1,9 +1,18 @@
 package de.brentspine.ttt.role;
 
+import com.comphenix.protocol.PacketType;
+import com.comphenix.protocol.ProtocolLibrary;
+import com.comphenix.protocol.ProtocolManager;
+import com.comphenix.protocol.events.ListenerPriority;
+import com.comphenix.protocol.events.PacketAdapter;
+import com.comphenix.protocol.events.PacketContainer;
+import com.comphenix.protocol.events.PacketEvent;
+import com.comphenix.protocol.wrappers.EnumWrappers;
 import com.mojang.datafixers.util.Pair;
 import de.brentspine.ttt.Main;
 import de.brentspine.ttt.util.ItemBuilder;
 import de.brentspine.ttt.util.Settings;
+import org.bukkit.ChatColor;
 import net.minecraft.server.v1_16_R3.EnumItemSlot;
 import net.minecraft.server.v1_16_R3.PacketPlayOutEntityEquipment;
 import org.bukkit.Bukkit;
@@ -11,6 +20,7 @@ import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_16_R3.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_16_R3.inventory.CraftItemStack;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -66,11 +76,12 @@ public class RoleManager {
         for (int i = counter; i < innocents + counter; i++)
             playerRoles.put(players.get(i).getName(), Role.INNOCENT);
 
+        runFakeArmor();
+
         for(Player current : players) {
             switch (getPlayerRole(current)) {
                 case TRAITOR:
-                    for(Player current2 : players)
-                        setFakeArmor(current2, current.getEntityId(), (getPlayerRole(current2) != Role.TRAITOR) ? Color.GRAY : Color.RED);
+                    setArmor(current, Color.RED);
                     break;
                 case DETECTIVE:
                     setArmor(current, Color.BLUE);
@@ -86,6 +97,9 @@ public class RoleManager {
         player.getInventory().setChestplate(getColoredChestPlate(color));
     }
 
+
+    //Use runFakeArmor() instead.
+    @Deprecated
     public void setFakeArmor(Player player, int entityID, Color color) {
         ItemStack armor = getColoredChestPlate(color);
 
@@ -95,6 +109,59 @@ public class RoleManager {
 
         final PacketPlayOutEntityEquipment entityEquipment = new PacketPlayOutEntityEquipment(entityID, equipmentList);
         ((CraftPlayer) player).getHandle().playerConnection.sendPacket(entityEquipment);
+
+    }
+
+    public void runFakeArmor() {
+
+        ProtocolManager manager = ProtocolLibrary.getProtocolManager();
+        final Color[] r = {null};
+
+        manager.addPacketListener(new PacketAdapter(plugin, ListenerPriority.HIGH, PacketType.Play.Server.ENTITY_EQUIPMENT) {
+            @Override
+            public void onPacketSending(PacketEvent event) {
+
+                Bukkit.getConsoleSender().sendMessage("§aRunning tests");
+                PacketContainer packet = event.getPacket();
+                EnumWrappers.ItemSlot itemSlot = packet.getSlotStackPairLists().read(0).get(0).getFirst();
+                ItemStack itemStack = packet.getSlotStackPairLists().read(0).get(0).getSecond();
+                Player target = event.getPlayer();
+                Entity playerEntity = manager.getEntityFromID(target.getWorld(), packet.getIntegers().read(0));
+                if(!(playerEntity instanceof Player)) {
+                    return;
+                }
+                Player player = (Player) playerEntity;
+                if(itemSlot == EnumWrappers.ItemSlot.CHEST) {
+                    Role targetRole = getPlayerRole(target);
+                    Role playerRole = getPlayerRole(player);
+                    switch (playerRole) {
+                        case TRAITOR:
+                            switch (targetRole) {
+                                case TRAITOR:
+                                    r[0] = Role.TRAITOR.getChestPlateColor();
+                                    break;
+                                case DETECTIVE:
+                                case INNOCENT:
+                                    r[0] = Role.INNOCENT.getChestPlateColor();
+                                    break;
+                            }
+                            break;
+                        case DETECTIVE:
+                            r[0] = Role.DETECTIVE.getChestPlateColor();
+                            break;
+                        case INNOCENT:
+                            r[0] = Role.INNOCENT.getChestPlateColor();
+                            break;
+                        default:
+                            r[0] = null;
+                            break;
+                    }
+                    List<com.comphenix.protocol.wrappers.Pair<EnumWrappers.ItemSlot, ItemStack>> edit = packet.getSlotStackPairLists().read(0);
+                    edit.get(0).setSecond(new ItemBuilder(Material.LEATHER_CHESTPLATE).setLeatherArmorColor(r[0]).build());
+                    packet.getSlotStackPairLists().write(0, edit);
+                }
+            }
+        });
 
     }
 
