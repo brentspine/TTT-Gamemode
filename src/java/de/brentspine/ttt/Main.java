@@ -12,10 +12,7 @@ import de.brentspine.ttt.commands.SetupCommand;
 import de.brentspine.ttt.commands.StartCommand;
 import de.brentspine.ttt.gamestates.GameState;
 import de.brentspine.ttt.gamestates.GameStateManager;
-import de.brentspine.ttt.listeners.BlockedListeners;
-import de.brentspine.ttt.listeners.GameProgressListener;
-import de.brentspine.ttt.listeners.PlayerLobbyConnectionListener;
-import de.brentspine.ttt.listeners.VotingListener;
+import de.brentspine.ttt.listeners.*;
 import de.brentspine.ttt.role.RoleManager;
 import de.brentspine.ttt.voting.Map;
 import de.brentspine.ttt.voting.Voting;
@@ -31,12 +28,10 @@ public class Main extends JavaPlugin {
 
     private GameStateManager gameStateManager;
     private ArrayList<Player> players;
-    private ArrayList<Player> spectators;
     private Voting voting;
     private ArrayList<Map> maps;
     private RoleManager roleManager;
     private ProtocolManager protocolManager;
-    private BlockedListeners blockedListeners;
 
     public static Main instance;
     public static final String PREFIX = "§4§lTTT §8» §7";
@@ -49,9 +44,6 @@ public class Main extends JavaPlugin {
         players = new ArrayList<>();
         roleManager = new RoleManager(this);
         protocolManager = ProtocolLibrary.getProtocolManager();
-        blockedListeners = new BlockedListeners(this);
-
-
 
         gameStateManager.setCurrentGameState(GameState.LOBBY_STATE);
 
@@ -73,7 +65,9 @@ public class Main extends JavaPlugin {
         pluginManager.registerEvents(new PlayerLobbyConnectionListener(this), this);
         pluginManager.registerEvents(new VotingListener(this), this);
         pluginManager.registerEvents(new GameProgressListener(this), this);
-        pluginManager.registerEvents(blockedListeners, this);
+        pluginManager.registerEvents(new PlayerInGameConnectionListener(this), this);
+        pluginManager.registerEvents(new BlockedListeners(this), this);
+        pluginManager.registerEvents(new ChatListener(this), this);
     }
 
     private void initVoting() {
@@ -109,10 +103,6 @@ public class Main extends JavaPlugin {
 
     public ArrayList<Player> getPlayers() {
         return players;
-    }
-
-    public ArrayList<Player> getSpectators() {
-        return spectators;
     }
 
     public Voting getVoting() {

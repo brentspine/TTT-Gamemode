@@ -19,6 +19,7 @@ public abstract class Settings {
     public static String votingItemName = "§cMap-Voting";
     public static Integer roleCountdownSeconds = 10;
     public static boolean allowDropItems = true;
+    //allowDropItems must be true for this to work
     public static boolean allowDropRoleItems = false;
 
     public static Double traitorProbability = 0.9;

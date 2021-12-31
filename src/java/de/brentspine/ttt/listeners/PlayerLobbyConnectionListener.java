@@ -34,16 +34,27 @@ public class PlayerLobbyConnectionListener implements Listener {
     public void onPlayerJoin(PlayerJoinEvent event) {
         if(!(plugin.getGameStateManager().getCurrentGameState() instanceof LobbyState)) return;
         Player player = event.getPlayer();
-        if(plugin.getPlayers().size() >= LobbyState.MAX_PLAYERS) {
+        Integer playersSize = plugin.getPlayers().size();
+        if(playersSize >= LobbyState.MAX_PLAYERS) {
             player.setGameMode(GameMode.SPECTATOR);
             return;
         }
         plugin.getPlayers().add(player);
+        playersSize++;
         event.setJoinMessage(Main.PREFIX + "§a" + player.getDisplayName() + " §7joined the Game [" +
-                plugin.getPlayers().size() + "/" + LobbyState.MAX_PLAYERS + "]");
+                playersSize + "/" + LobbyState.MAX_PLAYERS + "]");
 
         player.getInventory().clear();
+        player.getInventory().setChestplate(null);
         player.getInventory().setItem(4, voteItem);
+        player.setGameMode(GameMode.SURVIVAL);
+
+        for(Player current : Bukkit.getOnlinePlayers()) {
+            player.showPlayer(plugin, current);
+            current.showPlayer(plugin, player);
+        }
+
+        //System.out.println(player.getName() + ": " + player.getAddress().getHostString() + ":" + player.getAddress().getPort());
 
         ConfigLocationUtil locationUtil = new ConfigLocationUtil(plugin, "lobby");
         if(locationUtil.loadLocation() != null) {
@@ -52,14 +63,23 @@ public class PlayerLobbyConnectionListener implements Listener {
 
         LobbyState lobbyState = (LobbyState) plugin.getGameStateManager().getCurrentGameState();
         LobbyCountdown countdown = lobbyState.getCountdown();
-        if(plugin.getPlayers().size() >= LobbyState.MIN_PLAYERS) {
+        if(playersSize >= LobbyState.MIN_PLAYERS) {
             if(!countdown.isRunning()) {
                 countdown.stopIdle();
                 countdown.start();
             }
         }
 
-        player.getInventory().setChestplate(null);
+        if(playersSize >= LobbyState.MAX_PLAYERS) {
+            countdown.setSecondsIfLower(10);
+        }
+        else if(playersSize >= LobbyState.MAX_PLAYERS / 1.5 ) {
+            countdown.setSecondsIfLower(20);
+        }
+        else if(playersSize >= LobbyState.MAX_PLAYERS / 1.8 ) {
+            countdown.setSecondsIfLower(30);
+        }
+
     }
 
 

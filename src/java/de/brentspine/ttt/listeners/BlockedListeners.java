@@ -51,22 +51,6 @@ public class BlockedListeners implements Listener {
         GameState gameState = plugin.getGameStateManager().getCurrentGameState();
         ItemStack itemStack = event.getItemDrop().getItemStack();
 
-        if(!Settings.allowDropItems) {
-            event.setCancelled(true);
-            return;
-        }
-        if(Settings.allowDropRoleItems) return;
-        if(itemStack.getItemMeta() == null) {
-            event.setCancelled(true);
-            return;
-        }
-        if(gameState instanceof InGameState) {
-            Material material = itemStack.getType();
-            if(material == Material.LEATHER_CHESTPLATE || material == Material.STICK ||
-                    (material == Material.BOW && itemStack.getItemMeta().getDisplayName().equalsIgnoreCase( Settings.traitorBowName ))) {
-                event.setCancelled(true);
-            }
-        }
         if(gameState instanceof LobbyState) {
             event.setCancelled(true);
             return;
@@ -74,6 +58,23 @@ public class BlockedListeners implements Listener {
         if(gameState instanceof EndingState) {
             event.setCancelled(true);
             return;
+        }
+
+        if(Settings.allowDropItems) return; //Man darf Items droppen
+
+        if(itemStack.getItemMeta() == null) {
+            event.setCancelled(true);
+            return;
+        }
+
+        if(gameState instanceof InGameState) {
+            if(!Settings.allowDropRoleItems) {
+                Material material = itemStack.getType();
+                if(material == Material.LEATHER_CHESTPLATE || material == Material.STICK ||
+                        (material == Material.BOW && itemStack.getItemMeta().getDisplayName().equalsIgnoreCase( Settings.traitorBowName ))) {
+                    event.setCancelled(true);
+                }
+            }
         }
     }
 
@@ -112,6 +113,13 @@ public class BlockedListeners implements Listener {
             event.setCancelled(true);
             event.getEntity().sendMessage(Main.PREFIX + "§cPvP ist deaktiviert bis die Rollen verteilt wurden");
         }
+
+        if(!(event.getEntity() instanceof Player)) return;
+        Player player = (Player) event.getEntity();
+        if(inGameState.getSpectators().contains(player)) {
+            event.setCancelled(true);
+            return;
+        }
     }
 
     @EventHandler
@@ -120,11 +128,15 @@ public class BlockedListeners implements Listener {
             event.setCancelled(true);
             return;
         }
-
         InGameState inGameState = (InGameState) plugin.getGameStateManager().getCurrentGameState();
         if(inGameState.isGrace()) {
             event.setCancelled(true);
             event.getDamager().sendMessage(Main.PREFIX + "§cPvP ist deaktiviert bis die Rollen verteilt wurden");
+            return;
+        }
+        if(inGameState.getSpectators().contains(event.getDamager())) {
+            event.setCancelled(true);
+            return;
         }
     }
 
@@ -134,13 +146,28 @@ public class BlockedListeners implements Listener {
         Player player = event.getEntity();
         PacketPlayInClientCommand packet = new PacketPlayInClientCommand(PacketPlayInClientCommand.EnumClientCommand.PERFORM_RESPAWN);
         ((CraftPlayer) player).getHandle().playerConnection.a(packet);
+        player.spigot().respawn();
 
         player.getInventory().setChestplate(null);
+
+        if(plugin.getGameStateManager().getCurrentGameState() instanceof InGameState) {
+            InGameState inGameState = (InGameState) plugin.getGameStateManager().getCurrentGameState();
+            inGameState.addSpectator(player);
+        } else
+            player.setGameMode(GameMode.SURVIVAL);
     }
 
     @EventHandler
     public void onPlayerDamage(EntityDamageEvent event) {
         if(!(plugin.getGameStateManager().getCurrentGameState() instanceof InGameState)) {
+            event.setCancelled(true);
+            return;
+        }
+
+        if(!(event.getEntity() instanceof Player)) return;
+        Player player = (Player) event.getEntity();
+        InGameState inGameState = (InGameState) plugin.getGameStateManager().getCurrentGameState();
+        if(inGameState.getSpectators().contains(player)) {
             event.setCancelled(true);
             return;
         }

@@ -99,6 +99,15 @@ public class LobbyCountdown extends Countdown {
         }
     }
 
+    //Sets the seconds to the value given if its lower than the current one
+    public boolean setSecondsIfLower(int seconds) {
+        if(seconds < this.seconds) {
+            this.seconds = seconds;
+            return true;
+        }
+        return false;
+    }
+
     public int getSeconds() {
         return seconds;
     }
