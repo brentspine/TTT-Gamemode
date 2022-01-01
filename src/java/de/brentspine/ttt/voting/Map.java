@@ -2,6 +2,7 @@ package de.brentspine.ttt.voting;
 
 import de.brentspine.ttt.Main;
 import de.brentspine.ttt.gamestates.LobbyState;
+import de.brentspine.ttt.role.Tester;
 import de.brentspine.ttt.util.ConfigLocationUtil;
 import de.brentspine.ttt.util.Settings;
 import org.bukkit.Bukkit;
@@ -23,6 +24,7 @@ public class Map {
     private String builder;
     private Location[] spawnLocations = new Location[LobbyState.MAX_PLAYERS];
     private Location spectatorSpawn;
+    private Tester tester;
 
     private int votes;
 
@@ -33,11 +35,19 @@ public class Map {
         this.plugin = plugin;
         this.name = name.toLowerCase();
         this.displayName = name;
-
         this.file = new File(plugin.getDataFolder().getPath(),"maps.yml");
         this.config = new YamlConfiguration().loadConfiguration(file);
-        if(exists() && builder == null)
-            builder = config.getString("maps." + name + ".builder");
+        this.tester = new Tester(plugin, this);
+
+        if(exists()) {
+            if(builder == null) {
+                builder = config.getString("maps." + name + ".builder");
+            }
+            if(tester.exists()) {
+                tester.load();
+            }
+        }
+
         this.builder = builder;
         votes = 0;
     }

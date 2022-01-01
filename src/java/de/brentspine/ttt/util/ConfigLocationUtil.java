@@ -4,6 +4,7 @@ import de.brentspine.ttt.Main;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -35,6 +36,29 @@ public class ConfigLocationUtil {
         this(plugin, null, root);
     }
 
+    public void saveBlockLocation() {
+        config.set(root + ".world", location.getWorld().getName());
+        config.set(root + ".x", location.getBlockX());
+        config.set(root + ".y", location.getBlockY());
+        config.set(root + ".z", location.getBlockZ());
+        try {
+            config.save(file);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public Block loadBlockLocation() {
+        if(!config.contains(root)) {
+            return null;
+        }
+        World world = Bukkit.getWorld(config.getString(root + ".world"));
+        double x = config.getDouble(root + ".x");
+        double y = config.getDouble(root + ".y");
+        double z = config.getDouble(root + ".z");
+        return new Location(world, x, y, z).getBlock();
+    }
+
     public void saveLocation() {
         config.set(root + ".world", location.getWorld().getName());
         config.set(root + ".x", location.getX());
@@ -62,6 +86,9 @@ public class ConfigLocationUtil {
         return new Location(world, x, y, z, yaw, pitch);
     }
 
+    public boolean exists() {
+        return (config.getString(root) != null);
+    }
 
     public YamlConfiguration getConfig() {
         return config;

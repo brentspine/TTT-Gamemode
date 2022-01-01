@@ -3,6 +3,7 @@ package de.brentspine.ttt.commands;
 import de.brentspine.ttt.Main;
 import de.brentspine.ttt.gamestates.LobbyState;
 import de.brentspine.ttt.util.ConfigLocationUtil;
+import de.brentspine.ttt.util.TesterSetup;
 import de.brentspine.ttt.voting.Map;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
@@ -105,13 +106,17 @@ public class SetupCommand implements CommandExecutor {
                         player.sendMessage(Main.PREFIX + "§cThis map does not exist!");
                     }
                 } catch (Exception e) {
-                    player.sendMessage(Main.PREFIX + "§c/setup modifyMap <Map> <addSpawn|removeSpawn|spectatorSpawn>");
+                    player.sendMessage(Main.PREFIX + "§c/setup modifyMap <Map> <addSpawn | removeSpawn | spectatorSpawn | addTester>");
                     return true;
                 }
 
                 if(args.length < 3) {
-                    player.sendMessage(Main.PREFIX + "§c/setup modifyMap <Map> <addSpawn|removeSpawn|spectatorSpawn>");
+                    player.sendMessage(Main.PREFIX + "§c/setup modifyMap <Map> <addSpawn | removeSpawn | spectatorSpawn | addTester>");
                     return true;
+                }
+
+                else if(args[2].equalsIgnoreCase("setTester")) {
+                    new TesterSetup(plugin, map, player).startSetup();
                 }
 
                 else if(args[2].equalsIgnoreCase("addSpawn")) {
