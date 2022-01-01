@@ -17,6 +17,9 @@ public class Dice {
 
     public Dice() { }
 
+    public static Integer generateNumberBetween(Integer min, Integer max) {
+        return (int) (Math.random()*(max-min+1)+min);
+    }
 
     public Integer roll() {
         if(min == null || max == null) {

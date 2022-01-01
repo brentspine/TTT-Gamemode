@@ -14,6 +14,7 @@ import de.brentspine.ttt.gamestates.GameState;
 import de.brentspine.ttt.gamestates.GameStateManager;
 import de.brentspine.ttt.listeners.*;
 import de.brentspine.ttt.role.RoleManager;
+import de.brentspine.ttt.util.Dice;
 import de.brentspine.ttt.voting.Map;
 import de.brentspine.ttt.voting.Voting;
 import org.bukkit.Bukkit;
@@ -23,6 +24,9 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.stream.Collector;
 
 public class Main extends JavaPlugin {
 
@@ -68,6 +72,7 @@ public class Main extends JavaPlugin {
         pluginManager.registerEvents(new PlayerInGameConnectionListener(this), this);
         pluginManager.registerEvents(new BlockedListeners(this), this);
         pluginManager.registerEvents(new ChatListener(this), this);
+        pluginManager.registerEvents(new ChestListener(this), this);
     }
 
     private void initVoting() {

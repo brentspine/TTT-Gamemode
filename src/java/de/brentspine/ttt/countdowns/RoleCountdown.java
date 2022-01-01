@@ -76,4 +76,12 @@ public class RoleCountdown extends Countdown {
         Bukkit.getScheduler().cancelTask(taskID);
     }
 
+    public Integer getSeconds() {
+        return seconds;
+    }
+
+    public void setSeconds(Integer seconds) {
+        this.seconds = seconds;
+    }
+
 }

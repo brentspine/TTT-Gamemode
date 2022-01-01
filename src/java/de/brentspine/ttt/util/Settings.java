@@ -27,6 +27,7 @@ public abstract class Settings {
 
     //Item Names
     public static String traitorBowName = "§aTraitor-Bow";
+    public static Integer arrowAmountChestLoot = 12;
 
 
 

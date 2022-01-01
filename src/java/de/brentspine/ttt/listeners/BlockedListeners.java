@@ -81,6 +81,7 @@ public class BlockedListeners implements Listener {
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
         if(!(event.getWhoClicked() instanceof Player)) return;
+        if(event.getCurrentItem() == null) return;
         if(event.getCurrentItem().getType() == Material.LEATHER_CHESTPLATE)
             event.setCancelled(true);
     }

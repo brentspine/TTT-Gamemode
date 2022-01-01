@@ -101,4 +101,9 @@ public class InGameState extends GameState implements Listener {
     public boolean isGrace() {
         return grace;
     }
+
+    public RoleCountdown getRoleCountdown() {
+        return roleCountdown;
+    }
+
 }
