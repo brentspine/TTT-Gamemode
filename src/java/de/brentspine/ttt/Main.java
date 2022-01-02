@@ -11,6 +11,7 @@ import de.brentspine.ttt.commands.*;
 import de.brentspine.ttt.gamestates.GameState;
 import de.brentspine.ttt.gamestates.GameStateManager;
 import de.brentspine.ttt.listeners.*;
+import de.brentspine.ttt.role.RoleInventories;
 import de.brentspine.ttt.role.RoleManager;
 import de.brentspine.ttt.util.Dice;
 import de.brentspine.ttt.voting.Map;
@@ -34,6 +35,7 @@ public class Main extends JavaPlugin {
     private ArrayList<Map> maps;
     private RoleManager roleManager;
     private ProtocolManager protocolManager;
+    private RoleInventories roleInventories;
 
     public static Main instance;
     public static final String PREFIX = "§4§lTTT §8» §7";
@@ -46,6 +48,7 @@ public class Main extends JavaPlugin {
         players = new ArrayList<>();
         roleManager = new RoleManager(this);
         protocolManager = ProtocolLibrary.getProtocolManager();
+        roleInventories = new RoleInventories();
 
         gameStateManager.setCurrentGameState(GameState.LOBBY_STATE);
 
@@ -75,6 +78,7 @@ public class Main extends JavaPlugin {
         pluginManager.registerEvents(new ChatListener(this), this);
         pluginManager.registerEvents(new ChestListener(this), this);
         pluginManager.registerEvents(new TesterListener(this), this);
+        pluginManager.registerEvents(roleInventories, this);
     }
 
     private void initVoting() {
@@ -122,6 +126,10 @@ public class Main extends JavaPlugin {
 
     public RoleManager getRoleManager() {
         return roleManager;
+    }
+
+    public RoleInventories getRoleInventories() {
+        return roleInventories;
     }
 
 }

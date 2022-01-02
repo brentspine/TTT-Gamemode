@@ -26,8 +26,14 @@ public abstract class Settings {
     public static Double detectiveProbability = 0.8;
 
     //Item Names
-    public static String traitorBowName = "§aTraitor-Bow";
+    public static String traitorShopTitle = "§cTraitor-Shop";
+    public static String detectiveShopTitle = "§9Detective-Shop";
+    public static String traitorCreeperItemName  = "§cCreeper Spawn Egg";
+    public static String traitorTestFakerItemName = "§cTest-Faker";
+    public static String detectiveHealingStationItemName = "§9Healing-Station";
     public static Integer arrowAmountChestLoot = 12;
+
+    public static Integer traitorTestFakerItemSuccessRatePercent = 45;
 
     public static Material testerInactiveLampMaterial = Material.WHITE_STAINED_GLASS;
     public static Material testerActiveLampMaterial = Material.YELLOW_STAINED_GLASS;
@@ -36,6 +42,8 @@ public abstract class Settings {
     public static Material testerBorderBlockMaterial = Material.GLASS;
     public static Integer testingDelayTicks = 100; //20 Ticks = 1 Second
     public static Integer testingDelayAfterTestTicks = 40; //20 Ticks = 1 Second
+
+
 
 
 

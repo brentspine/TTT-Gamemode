@@ -54,6 +54,9 @@ public class RoleManager {
         detectives = (int) Math.round(Math.log(playerAmount) * Settings.detectiveProbability); //Detectives probability
         innocents = playerAmount - traitors - detectives;
 
+        traitors = 1;
+        detectives = 1;
+
         Bukkit.getConsoleSender().sendMessage(Main.PREFIX + "Traitor: " + traitors);
         Bukkit.getConsoleSender().sendMessage(Main.PREFIX + "Detectives: " + detectives);
         Bukkit.getConsoleSender().sendMessage(Main.PREFIX + "Innocents: " + innocents);
@@ -82,9 +85,11 @@ public class RoleManager {
             switch (getPlayerRole(current)) {
                 case TRAITOR:
                     setArmor(current, Color.RED);
+                    current.getInventory().setItem(8, plugin.getRoleInventories().getTraitorItem());
                     break;
                 case DETECTIVE:
                     setArmor(current, Color.BLUE);
+                    current.getInventory().setItem(8, plugin.getRoleInventories().getDetectiveItem());
                     break;
                 case INNOCENT:
                     setArmor(current, Color.GRAY);

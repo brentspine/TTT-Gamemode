@@ -71,7 +71,7 @@ public class BlockedListeners implements Listener {
             if(!Settings.allowDropRoleItems) {
                 Material material = itemStack.getType();
                 if(material == Material.LEATHER_CHESTPLATE || material == Material.STICK ||
-                        (material == Material.BOW && itemStack.getItemMeta().getDisplayName().equalsIgnoreCase( Settings.traitorBowName ))) {
+                        (material == Material.BOW && itemStack.getItemMeta().getDisplayName().equalsIgnoreCase( Settings.traitorShopTitle ))) {
                     event.setCancelled(true);
                 }
             }
