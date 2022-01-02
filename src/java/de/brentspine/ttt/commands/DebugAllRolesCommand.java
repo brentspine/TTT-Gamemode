@@ -27,7 +27,7 @@ public class DebugAllRolesCommand implements CommandExecutor {
         String message = "";
         for(Player current : plugin.getPlayers()) {
             Role role = plugin.getRoleManager().getPlayerRole(current);
-            message = message + current.getName() + ": " + role.getChatColor() + role.getName() + "\n";
+            message = message + current.getName() + ": " + role.getChatColor() + role.getName() + "\n§r";
         }
         player.sendMessage(message);
         return false;

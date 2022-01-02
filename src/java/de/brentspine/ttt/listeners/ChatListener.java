@@ -46,11 +46,24 @@ public class ChatListener implements Listener {
         Role playerRole = plugin.getRoleManager().getPlayerRole(player);
         switch (playerRole) {
             case DETECTIVE:
+                if(event.getMessage().startsWith("@d")) {
+                    event.setCancelled(true);
+                    for(String current : plugin.getRoleManager().getDetectivePlayers()) {
+                        Bukkit.getPlayer(current).sendMessage(getSpecialChatFormat(playerRole.getChatColor(), player, "@d") + event.getMessage().substring(3));
+                    }
+                    return;
+                }
             case INNOCENT:
                 event.setFormat(getChatFormat(playerRole.getChatColor(), player) + event.getMessage());
                 break;
             case TRAITOR:
                 event.setCancelled(true);
+                if(event.getMessage().startsWith("@t")) {
+                    for(String current : plugin.getRoleManager().getTraitorPlayers()) {
+                        Bukkit.getPlayer(current).sendMessage(getSpecialChatFormat(playerRole.getChatColor(), player, "@t") + event.getMessage().substring(3));
+                    }
+                    return;
+                }
                 for(Player current : Bukkit.getOnlinePlayers()) {
                     Role currentRole = plugin.getRoleManager().getPlayerRole(current);
                     switch (currentRole) {
@@ -70,6 +83,10 @@ public class ChatListener implements Listener {
 
     private String getChatFormat(ChatColor playerColor, Player player) {
         return "§7" + playerColor + player.getName() + " §8>> §7";
+    }
+
+    private String getSpecialChatFormat(ChatColor playerColor, Player player, String prefix) {
+        return "§7[" + prefix + "] " + playerColor + player.getName() + " §8>> §7";
     }
 
     private String getSpectatorChatFormat(Player player) {

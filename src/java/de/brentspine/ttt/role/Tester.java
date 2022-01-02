@@ -39,6 +39,10 @@ public class Tester {
             player.sendMessage(Main.PREFIX + "§cAls Detectives kannst du den Tester nicht benutzen"); //Achievement?
             return;
         }
+        if(((InGameState) plugin.getGameStateManager().getCurrentGameState()).getSpectators().contains(player)) {
+            player.sendMessage(Main.PREFIX + "§cAls Spectator kannst du den Tester nicht benutzen");
+            return;
+        }
 
         //Bukkit.broadcastMessage(Main.PREFIX + "§7Ein Spieler hat den §cTester §7betreten");
         inUse = true;

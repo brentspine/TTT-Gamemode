@@ -35,6 +35,18 @@ public class GameStateManager {
         return currentGameState;
     }
 
+    public LobbyState getGameStateAsLobbyState() {
+        return (LobbyState) currentGameState;
+    }
+
+    public InGameState getGameStateAsInGameState() {
+        return (InGameState) currentGameState;
+    }
+
+    public EndingState getGameStateAsEndingState() {
+        return (EndingState) currentGameState;
+    }
+
     public Main getPlugin() {
         return plugin;
     }
