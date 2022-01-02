@@ -29,6 +29,14 @@ public abstract class Settings {
     public static String traitorBowName = "§aTraitor-Bow";
     public static Integer arrowAmountChestLoot = 12;
 
+    public static Material testerInactiveLampMaterial = Material.WHITE_STAINED_GLASS;
+    public static Material testerActiveLampMaterial = Material.YELLOW_STAINED_GLASS;
+    public static Material testerResultInnocentLampMaterial = Material.GREEN_STAINED_GLASS;
+    public static Material testerResultTraitorLampMaterial = Material.RED_STAINED_GLASS;
+    public static Material testerBorderBlockMaterial = Material.GLASS;
+    public static Integer testingDelayTicks = 100; //20 Ticks = 1 Second
+    public static Integer testingDelayAfterTestTicks = 40; //20 Ticks = 1 Second
+
 
 
     //Man könnte einen Modus machen, bei dem Traitor nicht sehen können wer die anderen Verräter sind.

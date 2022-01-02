@@ -13,3 +13,7 @@ commands:
     description: Start
   boom:
     description: Boom
+  debugCurrentMap:
+    description: Debug
+  debugAllRoles:
+    description: Debug

@@ -7,9 +7,7 @@ import com.comphenix.protocol.events.ListenerPriority;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
-import de.brentspine.ttt.commands.BoomCommand;
-import de.brentspine.ttt.commands.SetupCommand;
-import de.brentspine.ttt.commands.StartCommand;
+import de.brentspine.ttt.commands.*;
 import de.brentspine.ttt.gamestates.GameState;
 import de.brentspine.ttt.gamestates.GameStateManager;
 import de.brentspine.ttt.listeners.*;
@@ -66,6 +64,9 @@ public class Main extends JavaPlugin {
         getCommand("start").setExecutor(new StartCommand(this));
         getCommand("boom").setExecutor(new BoomCommand());
 
+        getCommand("debugCurrentMap").setExecutor(new DebugCurrentMapCommand(this));
+        getCommand("debugAllRoles").setExecutor(new DebugAllRolesCommand(this));
+
         pluginManager.registerEvents(new PlayerLobbyConnectionListener(this), this);
         pluginManager.registerEvents(new VotingListener(this), this);
         pluginManager.registerEvents(new GameProgressListener(this), this);
@@ -73,6 +74,7 @@ public class Main extends JavaPlugin {
         pluginManager.registerEvents(new BlockedListeners(this), this);
         pluginManager.registerEvents(new ChatListener(this), this);
         pluginManager.registerEvents(new ChestListener(this), this);
+        pluginManager.registerEvents(new TesterListener(this), this);
     }
 
     private void initVoting() {

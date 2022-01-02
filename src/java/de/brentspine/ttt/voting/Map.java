@@ -43,9 +43,6 @@ public class Map {
             if(builder == null) {
                 builder = config.getString("maps." + name + ".builder");
             }
-            if(tester.exists()) {
-                tester.load();
-            }
         }
 
         this.builder = builder;
@@ -83,6 +80,10 @@ public class Map {
         for (int i = 0; i < Settings.maxPlayers; i++) {
             spawnLocations[i] = new ConfigLocationUtil(plugin, "maps." + name + ".spawn." + (i + 1)).loadLocation();
         }
+        if(tester.exists()) {
+            tester.load();
+        } else
+            Bukkit.getConsoleSender().sendMessage(Main.PREFIX + "§cEs wurden keine Tester für die Map " + getName() + " eingerichtet");
     }
 
     public void create() {
@@ -164,4 +165,9 @@ public class Map {
     public String getDisplayName() {
         return displayName;
     }
+
+    public Tester getTester() {
+        return tester;
+    }
+
 }

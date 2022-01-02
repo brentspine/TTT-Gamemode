@@ -106,4 +106,5 @@ public class Voting {
     public Map[] getVotingMaps() {
         return votingMaps;
     }
+
 }

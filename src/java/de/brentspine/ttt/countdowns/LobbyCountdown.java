@@ -49,10 +49,6 @@ public class LobbyCountdown extends Countdown {
                             Map winnerMap;
                             if(voting != null) {
                                 winnerMap = voting.getWinnerMap();
-                            } else {
-                                ArrayList<Map> maps = gameStateManager.getPlugin().getMaps();
-                                Collections.shuffle(maps);
-                                winnerMap = maps.get(0);
                             }
                             Bukkit.broadcastMessage(Main.PREFIX + "Voting winner: §c" + winnerMap.getDisplayName() + "§7 with §c" + winnerMap.getVotes() + "§7 votes");
                         }

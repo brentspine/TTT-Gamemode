@@ -106,4 +106,7 @@ public class InGameState extends GameState implements Listener {
         return roleCountdown;
     }
 
+    public Map getMap() {
+        return map;
+    }
 }
