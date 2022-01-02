@@ -8,6 +8,7 @@ import de.brentspine.ttt.gamestates.LobbyState;
 import de.brentspine.ttt.voting.Map;
 import de.brentspine.ttt.voting.Voting;
 import org.bukkit.Bukkit;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -46,7 +47,7 @@ public class LobbyCountdown extends Countdown {
 
                         if(seconds == 3) {
                             Voting voting = gameStateManager.getPlugin().getVoting();
-                            Map winnerMap;
+                            Map winnerMap = new Map(gameStateManager.getPlugin(), "null", "null");
                             if(voting != null) {
                                 winnerMap = voting.getWinnerMap();
                             }
