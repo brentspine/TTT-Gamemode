@@ -43,6 +43,7 @@ public class Main extends JavaPlugin {
     public static final String PREFIX = "§4§lTTT §8» §7";
     public static final String NO_PERMISSION = PREFIX + "§cYou don't have enough permissions to do that";
 
+    //Der Cartoon the Magic of Marketing ist der Schönste den dieser Planet je zu Gesicht bekommen hat
     @Override
     public void onEnable() {
         instance = this;

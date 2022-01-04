@@ -54,8 +54,8 @@ public class RoleManager {
         detectives = (int) Math.round(Math.log(playerAmount) * Settings.DETECTIVE_PROBABILITY); //Detectives probability
         innocents = playerAmount - traitors - detectives;
 
-        traitors = 1;
-        detectives = 1;
+        //traitors = 1;
+        //detectives = 1;
 
         Bukkit.getConsoleSender().sendMessage(Main.PREFIX + "Traitor: " + traitors);
         Bukkit.getConsoleSender().sendMessage(Main.PREFIX + "Detectives: " + detectives);

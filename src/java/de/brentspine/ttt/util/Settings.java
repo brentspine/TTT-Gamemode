@@ -36,6 +36,11 @@ public abstract class Settings {
     public static final Integer DETECTIVE_HEALING_STATION_PRICE = 3;
 
     public static final Integer TRAITOR_TEST_FAKER_SUCCESS_RATE = 75;
+    public static final Integer DETECTIVE_HEALING_STATION_DURABILITY = 25;
+    public static final Integer DETECTIVE_HEALING_STATION_RADIUS = 10;
+    //Amplifier + 1 is the effect strength, so if the amplifier is 0 the effect power will be 1
+    public static final Integer DETECTIVE_HEALING_STATION_AMPLIFIER = 1;
+
     public static final Integer STARTING_CAPITAL_POINTS = 10;
     public static final boolean KILL_TRAITOR_ON_TEAMMATE_KILL = false;
     public static final Integer POINTS_REMOVED_TRAITOR_KILL_TEAMMATE = 6;

@@ -96,8 +96,8 @@ public class BlockedListeners implements Listener {
 
     @EventHandler
     public void onCreatureSpawn(CreatureSpawnEvent event) {
-        //if(event.getSpawnReason() == CreatureSpawnEvent.SpawnReason.NATURAL)
-            //event.setCancelled(true);
+        if(event.getSpawnReason() == CreatureSpawnEvent.SpawnReason.NATURAL)
+            event.setCancelled(true);
     }
 
     @EventHandler

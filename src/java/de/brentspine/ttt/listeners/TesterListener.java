@@ -26,7 +26,7 @@ public class TesterListener implements Listener {
 
         Block block = event.getClickedBlock();
         Tester tester = inGameState.getMap().getTester();
-        if(tester == null) return;
+        if(tester.getButton() == null) return;
         if(tester.getButton().getLocation().equals(block.getLocation()))
             tester.test(event.getPlayer());
     }
