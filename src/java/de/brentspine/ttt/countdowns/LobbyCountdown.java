@@ -51,7 +51,7 @@ public class LobbyCountdown extends Countdown {
                             if(voting != null) {
                                 winnerMap = voting.getWinnerMap();
                             }
-                            Bukkit.broadcastMessage(Main.PREFIX + "Voting winner: §c" + winnerMap.getDisplayName() + "§7 with §c" + winnerMap.getVotes() + "§7 votes");
+                            Bukkit.broadcastMessage(Main.PREFIX + "Voting winner §c" + winnerMap.getDisplayName() + "§7 with §c" + winnerMap.getVotes() + "§7 votes");
                         }
 
                         break;

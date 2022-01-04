@@ -27,7 +27,7 @@ public class PlayerLobbyConnectionListener implements Listener {
 
     public PlayerLobbyConnectionListener(Main plugin) {
         this.plugin = plugin;
-        voteItem = new ItemBuilder(Material.NETHER_STAR).setDisplayName(Settings.votingItemName).setLore("§7Vote for a map you will be playing on").build();
+        voteItem = new ItemBuilder(Material.NETHER_STAR).setDisplayName(Settings.VOTING_ITEM_NAME).setLore("§7Vote for a map you will be playing on").build();
     }
 
     @EventHandler

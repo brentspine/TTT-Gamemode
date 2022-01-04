@@ -4,6 +4,7 @@ import de.brentspine.ttt.Main;
 import de.brentspine.ttt.countdowns.RoleCountdown;
 import de.brentspine.ttt.role.Role;
 import de.brentspine.ttt.util.ItemBuilder;
+import de.brentspine.ttt.util.Settings;
 import de.brentspine.ttt.voting.Map;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -42,7 +43,7 @@ public class InGameState extends GameState implements Listener {
         spectators = new ArrayList<>();
 
         Bukkit.broadcastMessage(Main.PREFIX + "§aStarting Game");
-        map = plugin.getVoting().getWinnerMap();
+        map = plugin.getVoting().getFinalVotingWinner();
         map.load();
         for (int i = 0; i < players.size(); i++)
             players.get(i).teleport(map.getSpawnLocations()[i]);
@@ -52,6 +53,7 @@ public class InGameState extends GameState implements Listener {
             current.setFoodLevel(20);
             current.setGameMode(GameMode.SURVIVAL);
             current.getInventory().clear();
+            plugin.getRoleInventories().getPointManager().setPlayerPoints(current, Settings.STARTING_CAPITAL_POINTS);
         }
 
         roleCountdown.start();
@@ -59,13 +61,13 @@ public class InGameState extends GameState implements Listener {
     }
 
     public void checkGameEnd() {
-        /*if(plugin.getRoleManager().getTraitorPlayers().size() <= 0) {
+        if(plugin.getRoleManager().getTraitorPlayers().size() <= 0) {
             winnerRole = Role.INNOCENT;
             plugin.getGameStateManager().setCurrentGameState(GameState.ENDING_STATE);
         } else if(plugin.getRoleManager().getTraitorPlayers().size() >= plugin.getPlayers().size()) {
             winnerRole = Role.TRAITOR;
             plugin.getGameStateManager().setCurrentGameState(GameState.ENDING_STATE);
-        }*/
+        }
     }
 
     public void addSpectator(Player player) {

@@ -5,11 +5,16 @@ import java.util.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.Material;
+import org.bukkit.craftbukkit.v1_16_R3.entity.CraftTippedArrow;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.TippedArrow;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
+import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.inventory.meta.SkullMeta;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 public class ItemBuilder {
 
@@ -137,6 +142,28 @@ public class ItemBuilder {
             is.setItemMeta(im);
         }catch(ClassCastException expected){}
         return this;
+    }
+
+    public ItemBuilder setArrowEffect(PotionEffect potionEffect) {
+        try {
+            PotionMeta im = (PotionMeta) is.getItemMeta();
+            im.addCustomEffect(potionEffect, true);
+            is.setItemMeta(im);
+            return this;
+        } catch (ClassCastException e) {
+            return this;
+        }
+    }
+
+    public ItemBuilder setArrowColor(Color color) {
+        try {
+            PotionMeta im = (PotionMeta) is.getItemMeta();
+            im.setColor(color);
+            is.setItemMeta(im);
+            return this;
+        } catch (ClassCastException e) {
+            return this;
+        }
     }
 
     public ItemStack build(){

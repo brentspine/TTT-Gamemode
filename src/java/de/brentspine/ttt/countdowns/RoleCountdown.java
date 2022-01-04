@@ -13,7 +13,7 @@ import java.util.ArrayList;
 public class RoleCountdown extends Countdown {
 
     private Main plugin;
-    private Integer seconds = Settings.roleCountdownSeconds;
+    private Integer seconds = Settings.ROLE_COUNTDOWN_SECONDS;
 
     public RoleCountdown(Main plugin) {
         this.plugin = plugin;

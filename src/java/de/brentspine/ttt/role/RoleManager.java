@@ -50,8 +50,8 @@ public class RoleManager {
     public void calculateRoles() {
         int playerAmount = players.size();
 
-        traitors = (int) Math.round(Math.log(playerAmount) * Settings.traitorProbability); //Traitor probability
-        detectives = (int) Math.round(Math.log(playerAmount) * Settings.detectiveProbability); //Detectives probability
+        traitors = (int) Math.round(Math.log(playerAmount) * Settings.TRAITOR_PROBABILITY); //Traitor probability
+        detectives = (int) Math.round(Math.log(playerAmount) * Settings.DETECTIVE_PROBABILITY); //Detectives probability
         innocents = playerAmount - traitors - detectives;
 
         traitors = 1;
@@ -126,7 +126,6 @@ public class RoleManager {
             @Override
             public void onPacketSending(PacketEvent event) {
 
-                Bukkit.getConsoleSender().sendMessage("§aRunning tests");
                 PacketContainer packet = event.getPacket();
                 EnumWrappers.ItemSlot itemSlot = packet.getSlotStackPairLists().read(0).get(0).getFirst();
                 ItemStack itemStack = packet.getSlotStackPairLists().read(0).get(0).getSecond();

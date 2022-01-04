@@ -11,10 +11,13 @@ import com.comphenix.protocol.reflect.EquivalentConverter;
 import com.comphenix.protocol.reflect.StructureModifier;
 import com.comphenix.protocol.wrappers.*;
 import de.brentspine.ttt.Main;
+import de.brentspine.ttt.api.KarmaManager;
 import de.brentspine.ttt.gamestates.InGameState;
+import de.brentspine.ttt.role.PointManager;
 import de.brentspine.ttt.role.Role;
 import de.brentspine.ttt.role.RoleManager;
 import de.brentspine.ttt.util.ItemBuilder;
+import de.brentspine.ttt.util.Settings;
 import org.bukkit.ChatColor;
 import net.minecraft.server.v1_16_R3.EnumItemSlot;
 import net.minecraft.server.v1_16_R3.PacketEncoder;
@@ -38,10 +41,14 @@ public class GameProgressListener implements Listener {
 
     private Main plugin;
     private RoleManager roleManager;
+    private PointManager pointManager;
+    private KarmaManager karmaManager;
 
     public GameProgressListener(Main plugin) {
         this.plugin = plugin;
         roleManager = plugin.getRoleManager();
+        pointManager = plugin.getRoleInventories().getPointManager();
+        karmaManager = plugin.getKarmaManager();
     }
 
 
@@ -91,20 +98,50 @@ public class GameProgressListener implements Listener {
             case TRAITOR:
                 if(victimRole == Role.TRAITOR) {
                     killer.sendMessage(Main.PREFIX + "§cDu hast einen anderen Traitor getötet!");
-                    killer.kickPlayer(Main.PREFIX + "§cDu hast einen anderen Traitor getötet!");
-                    plugin.getPlayers().remove(killer);
+                    pointManager.removePoints(killer, Settings.POINTS_REMOVED_TRAITOR_KILL_TEAMMATE);
+                    karmaManager.remove(killer, Settings.KARMA_REMOVED_TRAITOR_KILL_TEAMMATE);
+                    if(Settings.KILL_TRAITOR_ON_TEAMMATE_KILL) {
+                        killer.setHealth(0);
+                        plugin.getPlayers().remove(killer);
+                    }
+                    //killer.kickPlayer(Main.PREFIX + "§cDu hast einen anderen Traitor getötet!");
                 } else {
                     killer.sendMessage(Main.PREFIX + "§aDu hast einen " + victimRole.getChatColor() + victimRole.getName() + "§a getötet");
+                    if(victimRole == Role.DETECTIVE) {
+                        pointManager.addPlayerPoints(killer, Settings.POINTS_ADDED_TRAITOR_KILL_DETECTIVE);
+                        karmaManager.addKarma(killer, Settings.KARMA_ADDED_TRAITOR_KILL_DETECTIVE);
+                    }
+                    else if(victimRole == Role.INNOCENT) {
+                        pointManager.addPlayerPoints(killer, Settings.POINTS_ADDED_TRAITOR_KILL_INNOCENT);
+                        karmaManager.addKarma(killer, Settings.KARMA_ADDED_TRAITOR_KILL_INNOCENT);
+                    }
                 }
                 break;
-            case INNOCENT:
             case DETECTIVE:
                 if(victimRole == Role.TRAITOR) {
                     killer.sendMessage(Main.PREFIX + "§aDu hast einen " + victimRole.getChatColor() + victimRole.getName() + "§a getötet");
+                    pointManager.addPlayerPoints(killer, Settings.POINTS_ADDED_DETECTIVE_KILL_TRAITOR);
+                    karmaManager.addKarma(killer, Settings.KARMA_ADDED_DETECTIVE_KILL_TRAITOR);
                 } else if(victimRole == Role.INNOCENT) {
                     killer.sendMessage(Main.PREFIX + "§cDu hast einen " + victimRole.getChatColor() + victimRole.getName() + "§c ermordet!");
+                    pointManager.removePoints(killer, Settings.POINTS_REMOVED_DETECTIVE_KILL_INNOCENT);
+                    karmaManager.remove(killer, Settings.KARMA_REMOVED_DETECTIVE_KILL_INNOCENT);
                 } else if(victimRole == Role.DETECTIVE) {
                     killer.sendMessage(Main.PREFIX + "§aDu hast einen " + victimRole.getChatColor() + victimRole.getName() + "§a getötet");
+                    pointManager.removePoints(killer, Settings.POINTS_REMOVED_DETECTIVE_KILL_TEAMMATE);
+                    karmaManager.remove(killer, Settings.KARMA_REMOVED_DETECTIVE_KILL_TEAMMATE);
+                }
+                break;
+            case INNOCENT:
+                if(victimRole == Role.TRAITOR) {
+                    killer.sendMessage(Main.PREFIX + "§aDu hast einen " + victimRole.getChatColor() + victimRole.getName() + "§a getötet");
+                    karmaManager.addKarma(killer, Settings.KARMA_ADDED_DETECTIVE_KILL_TRAITOR);
+                } else if(victimRole == Role.INNOCENT) {
+                    killer.sendMessage(Main.PREFIX + "§cDu hast einen " + victimRole.getChatColor() + victimRole.getName() + "§c ermordet!");
+                    karmaManager.remove(killer, Settings.KARMA_REMOVED_DETECTIVE_KILL_INNOCENT);
+                } else if(victimRole == Role.DETECTIVE) {
+                    killer.sendMessage(Main.PREFIX + "§aDu hast einen " + victimRole.getChatColor() + victimRole.getName() + "§a getötet");
+                    karmaManager.remove(killer, Settings.KARMA_REMOVED_DETECTIVE_KILL_TEAMMATE);
                 }
                 break;
         }

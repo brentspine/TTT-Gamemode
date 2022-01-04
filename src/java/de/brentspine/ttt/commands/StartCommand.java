@@ -3,6 +3,7 @@ package de.brentspine.ttt.commands;
 import de.brentspine.ttt.Main;
 import de.brentspine.ttt.countdowns.Countdown;
 import de.brentspine.ttt.gamestates.LobbyState;
+import de.brentspine.ttt.util.Settings;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -52,7 +53,7 @@ public class StartCommand implements CommandExecutor {
             return true;
         }
 
-        lobbyState.getCountdown().setSeconds(START_SECONDS);
+        lobbyState.getCountdown().setSeconds(Settings.COUNTDOWN_START_COMMAND_SECONDS);
         //player.sendMessage(Main.PREFIX + "Starting the Game in " + START_SECONDS + " seconds");
 
         return false;

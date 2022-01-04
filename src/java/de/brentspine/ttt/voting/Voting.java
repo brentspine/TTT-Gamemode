@@ -27,6 +27,8 @@ public class Voting {
     private HashMap<String, Integer> playerVotes = new HashMap<>();
     private Inventory votingInventory;
 
+    private Map finalVotingWinner;
+
     File file;
     YamlConfiguration config;
 
@@ -51,7 +53,7 @@ public class Voting {
 
     public void initVotingInventory() {
         if(votingInventory == null) {
-            votingInventory = Bukkit.createInventory(null, 1*9, Settings.votingInventoryTitle);
+            votingInventory = Bukkit.createInventory(null, 1*9, Settings.VOTING_INVENTORY_TITLE);
         }
         for (int i = 0; i < votingMaps.length; i++) {
             Map currentMap = votingMaps[i];
@@ -63,22 +65,26 @@ public class Voting {
     }
 
     public Map getWinnerMap() {
-        Map winnerMap = votingMaps[0];
-        for (int i = 1; i < votingMaps.length; i++) {
-            if(votingMaps[i].getVotes() > winnerMap.getVotes()) {
-                winnerMap = votingMaps[i];
-            }
-            else if(votingMaps[i].getVotes() == winnerMap.getVotes()) {
-                if(new Dice(1, 2).roll() == 1) {
+        if(plugin.getGameStateManager().getGameStateAsLobbyState().getCountdown().getSeconds() >= 3) {
+            Map winnerMap = votingMaps[0];
+            for (int i = 1; i < votingMaps.length; i++) {
+                if(votingMaps[i].getVotes() > winnerMap.getVotes()) {
                     winnerMap = votingMaps[i];
                 }
+                else if(votingMaps[i].getVotes() == winnerMap.getVotes()) {
+                    if(new Dice(1, 2).roll() == 1) {
+                        winnerMap = votingMaps[i];
+                    }
+                }
             }
+            finalVotingWinner = winnerMap;
+            return winnerMap;
         }
-        return winnerMap;
+        return finalVotingWinner;
     }
 
     public void vote(Player player, int votingMap) {
-        if(!Settings.oneTimeVote || !playerVotes.containsKey(player.getName())) {
+        if(!Settings.ONE_TIME_VOTE || !playerVotes.containsKey(player.getName())) {
             votingMaps[votingMap].addVote();
             playerVotes.put(player.getName(), votingMap);
             player.sendMessage(Main.PREFIX + "You voted for §c" + votingMaps[votingMap].getDisplayName() + "§7. The map currently has §c" + votingMaps[votingMap].getVotes() + "§7 votes");
@@ -105,6 +111,10 @@ public class Voting {
 
     public Map[] getVotingMaps() {
         return votingMaps;
+    }
+
+    public Map getFinalVotingWinner() {
+        return finalVotingWinner;
     }
 
 }

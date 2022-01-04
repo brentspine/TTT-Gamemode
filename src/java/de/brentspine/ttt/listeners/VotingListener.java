@@ -27,7 +27,7 @@ public class VotingListener implements Listener {
         Player player = event.getPlayer();
         ItemStack item = event.getItem();
         if(item == null) return;
-        if(item.getItemMeta().getDisplayName().equals(Settings.votingItemName))
+        if(item.getItemMeta().getDisplayName().equals(Settings.VOTING_ITEM_NAME))
             player.openInventory(voting.getVotingInventory());
     }
 
@@ -35,7 +35,7 @@ public class VotingListener implements Listener {
     public void onInventoryClick(InventoryClickEvent event) {
         if(!(event.getWhoClicked() instanceof Player)) return;
         Player player = (Player) event.getWhoClicked();
-        if(!player.getOpenInventory().getTitle().equals(Settings.votingInventoryTitle)) return;
+        if(!player.getOpenInventory().getTitle().equals(Settings.VOTING_INVENTORY_TITLE)) return;
         event.setCancelled(true);
         for (int i = 0; i < voting.getVotingInventoryOrder().length; i++) {
             if(voting.getVotingInventoryOrder()[i] == event.getSlot()) {

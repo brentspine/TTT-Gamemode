@@ -7,6 +7,7 @@ import com.comphenix.protocol.events.ListenerPriority;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
+import de.brentspine.ttt.api.KarmaManager;
 import de.brentspine.ttt.commands.*;
 import de.brentspine.ttt.gamestates.GameState;
 import de.brentspine.ttt.gamestates.GameStateManager;
@@ -36,6 +37,7 @@ public class Main extends JavaPlugin {
     private RoleManager roleManager;
     private ProtocolManager protocolManager;
     private RoleInventories roleInventories;
+    private KarmaManager karmaManager;
 
     public static Main instance;
     public static final String PREFIX = "§4§lTTT §8» §7";
@@ -48,7 +50,8 @@ public class Main extends JavaPlugin {
         players = new ArrayList<>();
         roleManager = new RoleManager(this);
         protocolManager = ProtocolLibrary.getProtocolManager();
-        roleInventories = new RoleInventories();
+        roleInventories = new RoleInventories(this);
+        karmaManager = new KarmaManager(this);
 
         gameStateManager.setCurrentGameState(GameState.LOBBY_STATE);
 
@@ -69,6 +72,7 @@ public class Main extends JavaPlugin {
 
         getCommand("debugCurrentMap").setExecutor(new DebugCurrentMapCommand(this));
         getCommand("debugAllRoles").setExecutor(new DebugAllRolesCommand(this));
+        getCommand("devtest").setExecutor(new DevTestCommand());
 
         pluginManager.registerEvents(new PlayerLobbyConnectionListener(this), this);
         pluginManager.registerEvents(new VotingListener(this), this);
@@ -79,6 +83,7 @@ public class Main extends JavaPlugin {
         pluginManager.registerEvents(new ChestListener(this), this);
         pluginManager.registerEvents(new TesterListener(this), this);
         pluginManager.registerEvents(roleInventories, this);
+        pluginManager.registerEvents(new ShopItemListener(this), this);
     }
 
     private void initVoting() {
@@ -130,6 +135,10 @@ public class Main extends JavaPlugin {
 
     public RoleInventories getRoleInventories() {
         return roleInventories;
+    }
+
+    public KarmaManager getKarmaManager() {
+        return karmaManager;
     }
 
 }

@@ -17,3 +17,5 @@ commands:
     description: Debug
   debugAllRoles:
     description: Debug
+  devtest:
+    description: devtest

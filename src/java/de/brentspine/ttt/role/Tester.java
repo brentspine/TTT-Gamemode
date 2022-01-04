@@ -3,6 +3,7 @@ package de.brentspine.ttt.role;
 import de.brentspine.ttt.Main;
 import de.brentspine.ttt.gamestates.InGameState;
 import de.brentspine.ttt.util.ConfigLocationUtil;
+import de.brentspine.ttt.util.Dice;
 import de.brentspine.ttt.util.Settings;
 import de.brentspine.ttt.voting.Map;
 import org.bukkit.*;
@@ -44,6 +45,15 @@ public class Tester {
             return;
         }
 
+        if(role == Role.TRAITOR) {
+            if(RoleInventories.removeMaterialItem(player, Material.GREEN_STAINED_GLASS)) {
+                player.sendMessage(Main.PREFIX + "Du hast durch deinen " + Settings.TRAITOR_TEST_FAKER_ITEM_NAME + " §7eine Chance von §c" + Settings.TRAITOR_TEST_FAKER_SUCCESS_RATE + "% §7als Innocent getestet zu werden");
+                if(Dice.generateNumberBetween(1, 100) <= Settings.TRAITOR_TEST_FAKER_SUCCESS_RATE) {
+                    role = Role.INNOCENT;
+                }
+            }
+        }
+
         //Bukkit.broadcastMessage(Main.PREFIX + "§7Ein Spieler hat den §cTester §7betreten");
         inUse = true;
         for(Entity current : player.getNearbyEntities(4, 2, 4)) {
@@ -54,26 +64,27 @@ public class Tester {
         player.teleport(((InGameState) plugin.getGameStateManager().getCurrentGameState()).getMap().getTester().getPlayerLocation());
 
         for(Block current : borderBlocks)
-            world.getBlockAt(current.getLocation()).setType(Settings.testerBorderBlockMaterial);
+            world.getBlockAt(current.getLocation()).setType(Settings.TESTER_BORDER_BLOCK_MATERIAL);
 
+        Role endRole = role;
         Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
             @Override
             public void run() {
-                endTesting(role);
+                endTesting(endRole);
             }
-        }, Settings.testingDelayTicks);
+        }, Settings.TESTING_DELAY_TICKS);
     }
 
     private void endTesting(Role role) {
         for(Block current : lamps)
-            world.getBlockAt(current.getLocation()).setType((role == Role.INNOCENT) ? Settings.testerResultInnocentLampMaterial : Settings.testerResultTraitorLampMaterial);
+            world.getBlockAt(current.getLocation()).setType((role == Role.INNOCENT) ? Settings.TESTER_RESULT_INNOCENT_MATERIAL : Settings.TESTER_RESULT_TRAITOR_MATERIAL);
 
         Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
             @Override
             public void run() {
                 reset();
             }
-        }, Settings.testingDelayAfterTestTicks);
+        }, Settings.TESTING_DELAY_AFTER_TEST_TICKS);
     }
 
     public void load() {
@@ -102,7 +113,7 @@ public class Tester {
         for(Block current : borderBlocks)
             world.getBlockAt(current.getLocation()).setType(Material.AIR);
         for(Block current : lamps)
-            world.getBlockAt(current.getLocation()).setType(Settings.testerInactiveLampMaterial);
+            world.getBlockAt(current.getLocation()).setType(Settings.TESTER_INACTIVE_LAMP_MATERIAL);
     }
 
     public boolean exists() {

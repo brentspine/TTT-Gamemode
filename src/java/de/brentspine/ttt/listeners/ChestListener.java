@@ -28,7 +28,7 @@ public class ChestListener implements Listener {
         woodenSword = new ItemBuilder(Material.WOODEN_SWORD).build();
         stoneSword = new ItemBuilder(Material.STONE_SWORD).build();
         bow = new ItemBuilder(Material.BOW).build();
-        arrows = new ItemBuilder(Material.ARROW, Settings.arrowAmountChestLoot).build();
+        arrows = new ItemBuilder(Material.ARROW, Settings.ARROW_AMOUNT_CHEST_LOOT).build();
 
         normalItemAmount = 3;
 

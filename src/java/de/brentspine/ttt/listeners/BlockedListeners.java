@@ -60,7 +60,10 @@ public class BlockedListeners implements Listener {
             return;
         }
 
-        if(Settings.allowDropItems) return; //Man darf Items droppen
+        if(!Settings.ALLOW_DROP_ITEMS) {
+            event.setCancelled(true);
+            return; //Man darf Items droppen
+        }
 
         if(itemStack.getItemMeta() == null) {
             event.setCancelled(true);
@@ -68,10 +71,10 @@ public class BlockedListeners implements Listener {
         }
 
         if(gameState instanceof InGameState) {
-            if(!Settings.allowDropRoleItems) {
+            if(!Settings.ALLOW_DROP_ROLE_ITEMS) {
                 Material material = itemStack.getType();
                 if(material == Material.LEATHER_CHESTPLATE || material == Material.STICK ||
-                        (material == Material.BOW && itemStack.getItemMeta().getDisplayName().equalsIgnoreCase( Settings.traitorShopTitle ))) {
+                        (material == Material.BOW && itemStack.getItemMeta().getDisplayName().equalsIgnoreCase( Settings.TRAITOR_SHOP_TITLE ))) {
                     event.setCancelled(true);
                 }
             }
@@ -93,8 +96,8 @@ public class BlockedListeners implements Listener {
 
     @EventHandler
     public void onCreatureSpawn(CreatureSpawnEvent event) {
-        if(event.getSpawnReason() == CreatureSpawnEvent.SpawnReason.NATURAL)
-            event.setCancelled(true);
+        //if(event.getSpawnReason() == CreatureSpawnEvent.SpawnReason.NATURAL)
+            //event.setCancelled(true);
     }
 
     @EventHandler

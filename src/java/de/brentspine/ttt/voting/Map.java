@@ -77,7 +77,7 @@ public class Map {
     //Editieren bei neuen Locations
     public void load() {
         spectatorSpawn = new ConfigLocationUtil(plugin, "maps." + name + ".spectator").loadLocation();
-        for (int i = 0; i < Settings.maxPlayers; i++) {
+        for (int i = 0; i < Settings.MAX_PLAYERS; i++) {
             spawnLocations[i] = new ConfigLocationUtil(plugin, "maps." + name + ".spawn." + (i + 1)).loadLocation();
         }
         if(tester.exists()) {
